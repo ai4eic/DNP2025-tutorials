@@ -1,0 +1,21 @@
+{
+  "title": "DNP 2025 Deep Learning Tutorials for Nuclear Physics",
+  "description": "Deep Learning tutorials for FCAL shower classification and generation at GlueX",
+  "author": "AI4EIC Collaboration",
+  "language": "en",
+  "plugins": [
+    "katex",
+    "code",
+    "edit-link",
+    "github"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/ai4eic/DNP2025-tutorials"
+    },
+    "edit-link": {
+      "base": "https://github.com/ai4eic/DNP2025-tutorials/edit/main",
+      "label": "Edit This Page"
+    }
+  }
+}
