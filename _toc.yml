@@ -67,7 +67,11 @@ parts:
         title: Glossary
       - file: chapters/21-faq
         title: FAQ
-      - file: CONTRIBUTING
-        title: Contributing
       - file: BUILD
         title: Build Instructions
+      - file: DEPLOYMENT
+        title: Deployment Guide
+      - file: MIGRATION
+        title: Migration Notes
+      - file: CONTRIBUTING
+        title: Contributing
