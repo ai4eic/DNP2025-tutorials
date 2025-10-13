@@ -35,6 +35,7 @@ ipywidgets>=8.0.0
 jupyter>=1.0.0
 jupyterlab>=3.4.0
 notebook>=6.4.0
+jupyter-book>=1.0.0
 
 # Progress Bars and Utilities
 tqdm>=4.62.0
