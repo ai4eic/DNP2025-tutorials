@@ -35,6 +35,7 @@ jobs:
       - name: Build Jupyter Book
         run: |
           jupyter-book build .
+          touch _build/html/.nojekyll
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
