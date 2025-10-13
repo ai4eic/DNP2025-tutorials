@@ -5,10 +5,10 @@ pandas>=1.3.0
 matplotlib>=3.4.0
 seaborn>=0.11.0
 
-# Deep Learning
-torch>=2.0.0
-torchvision>=0.15.0
-torchaudio>=2.0.0
+# # Deep Learning
+# torch>=2.0.0
+# torchvision>=0.15.0
+# torchaudio>=2.0.0
 
 # Alternative: TensorFlow/Keras (uncomment if using instead of PyTorch)
 # tensorflow>=2.10.0
@@ -41,7 +41,7 @@ jupyter-book>=1.0.0
 tqdm>=4.62.0
 
 # Model Evaluation
-pytorch-fid>=0.3.0  # For Frechet Inception Distance
+# pytorch-fid>=0.3.0  # For Frechet Inception Distance
 
 # Experiment Tracking (optional)
 # tensorboard>=2.10.0
