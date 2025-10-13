@@ -96,15 +96,18 @@ DNP2025-tutorials/
 
 ### View the Tutorial
 
-**Option 1: GitHub** (Easiest)
+**Option 1: Online (Recommended)**
+- View the published Jupyter Book at [https://ai4eic.github.io/DNP2025-tutorials/](https://ai4eic.github.io/DNP2025-tutorials/)
+
+**Option 2: GitHub** (Simple)
 - Browse chapters directly on [GitHub](https://github.com/ai4eic/DNP2025-tutorials/tree/main/chapters)
 
-**Option 2: GitBook.com** (Best Experience)
-- Import repository to [GitBook.com](https://www.gitbook.com/)
-
-**Option 3: Local Markdown**
-- Open `.md` files in VS Code with Markdown preview
-- Use Grip: `pip install grip && grip README.md`
+**Option 3: Local Build**
+- Build and view locally:
+  ```bash
+  jupyter-book build .
+  open _build/html/index.html
+  ```
 
 See [BUILD.md](BUILD.md) for more options.
 
