@@ -2,76 +2,31 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: README
+root: landing_page
+
 parts:
   - caption: Overview
     chapters:
-      - file: QUICKSTART
-        title: Quick Start Guide
-  - caption: Getting Started
+      - file: chapters/01-intro-to-gluex.md
+        title: Introduction to GlueX
+      - file: chapters/01-intro-to-fcal.md
+        title: Introduction to FCAL
+  - caption: CNN for FCAL
     chapters:
-      - file: chapters/01-overview
-        title: Tutorial Overview
-      - file: chapters/02-setup
-        title: Setup and Installation
-      - file: chapters/03-fcal-physics
-        title: FCAL Physics Background
+      - file: notebooks/02-dataset-preparation
+        title: Dataset Preparation
+      - url: https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link
+        title: Lecture -- CNN Overview
+      - file: notebooks/02-cnn-classification
+        title: CNN for FCAL Shower Classification
+      - file: notebooks/02-cnn-regression
+        title: CNN for FCAL Shower Regression
   
-  - caption: Data Preparation
+  - caption: Generative AI for FCAL
     chapters:
-      - file: chapters/04-data-understanding
-        title: Understanding FCAL Data
-      - file: chapters/05-data-preprocessing
-        title: Data Preprocessing
-      - file: chapters/06-dataset-creation
-        title: Dataset Creation
-  
-  - caption: CNN Classification
-    chapters:
-      - file: chapters/07-cnn-intro
-        title: Introduction to CNNs
-      - file: chapters/08-classification-model
-        title: Building Classification Models
-      - file: chapters/09-training
-        title: Training and Optimization
-      - file: chapters/10-evaluation
-        title: Model Evaluation
-  
-  - caption: Generative AI
-    chapters:
-      - file: chapters/11-generative-intro
-        title: Introduction to Generative Models
-      - file: chapters/12-gan-model
-        title: GAN for FCAL Showers
-      - file: chapters/13-vae-model
-        title: VAE for FCAL Showers
-      - file: chapters/14-conditional-generation
-        title: Conditional Generation
-      - file: chapters/15-physics-informed
-        title: Physics-Informed Generation
-  
-  - caption: Advanced Topics
-    chapters:
-      - file: chapters/16-transfer-learning
-        title: Transfer Learning
-      - file: chapters/17-uncertainty
-        title: Uncertainty Quantification
-      - file: chapters/18-deployment
-        title: Model Deployment
+      - file: notebooks/03-gan-generation
   
   - caption: Appendix
     chapters:
-      - file: chapters/19-references
-        title: References and Resources
-      - file: chapters/20-glossary
-        title: Glossary
-      - file: chapters/21-faq
-        title: FAQ
-      - file: BUILD
-        title: Build Instructions
-      - file: DEPLOYMENT
-        title: Deployment Guide
-      - file: MIGRATION
-        title: Migration Notes
-      - file: CONTRIBUTING
-        title: Contributing
+      - file: notebooks/CNN_DNP2025_01.ipynb
+        title: Primer for CNN using `PyTorch`

@@ -1,11 +1,11 @@
 # Jupyter Book Configuration
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Deep Learning Tutorials for Experimental Nuclear Physics
-author: AI4EIC Collaboration
+title: Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025
+author: Karthik Suresh & Cristiano Fanelli
 copyright: "2025"
 logo: ""
-
+only_build_toc_files: true
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
@@ -15,6 +15,10 @@ execute:
 latex:
   latex_documents:
     targetname: dnp2025-tutorials.tex
+
+# In _config.yml
+bibtex_bibfiles:
+    - references.bib
 
 # Information about where the book exists on the web
 repository:
