@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,10 +175,19 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">CNN for FCAL</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-dataset-preparation.html">Dataset Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-problem-description.html">Problem Formulation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-classification.html">CNN for FCAL Shower Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-regression.html">CNN for FCAL Shower Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-dataset-preparation.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-classification.html">Data Generation</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-regression.html">Data Generation</a></li>
+
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="nav bd-sidenav">
@@ -454,11 +463,11 @@ document.write(`
 <section id="detector-systems-overview">
 <h2>Detector Systems Overview<a class="headerlink" href="#detector-systems-overview" title="Link to this heading">#</a></h2>
 <p>Below is a simplified schematic of the GlueX detector in Hall D:</p>
-<figure class="align-default" id="id24">
+<figure class="align-default" id="id25">
 <a class="reference internal image-reference" href="../_images/gluex_detector_schematic.png"><img alt="GlueX detector schematic" src="../_images/gluex_detector_schematic.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Cut-away view of GlueX in Hall D (not to scale).</span><a class="headerlink" href="#id24" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Cut-away view of GlueX in Hall D (not to scale).</span><a class="headerlink" href="#id25" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The detector is azimuthally symmetric and nearly hermetic for charged and neutral particles. <span id="id8">[<a class="reference internal" href="#id15" title="GlueX Collaboration and others. The gluex beamline and detector. Nuclear Instruments and Methods A 987, pages 164807, 2021. arXiv:2005.14272.">4</a>]</span></p>
@@ -500,11 +509,11 @@ document.write(`
 <li><p>Reaction factories / amplitude analysis</p></li>
 </ul>
 <p>The JANA/DANA framework enables modular plugins for physics skims and format conversion.</p>
-<figure class="align-default" id="id25">
+<figure class="align-default" id="id26">
 <a class="reference internal image-reference" href="../_images/simreconFlow.png"><img alt="GlueX detector schematic" src="../_images/simreconFlow.png" style="width: 80%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Flow chart on simulation and reconstruction pipeline used at GlueX.</span><a class="headerlink" href="#id25" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Flow chart on simulation and reconstruction pipeline used at GlueX.</span><a class="headerlink" href="#id26" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -549,6 +558,10 @@ document.write(`
 <div class="citation" id="id21" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">8</a><span class="fn-bracket">]</span></span>
 <p>GlueX Collaboration / Hall-D Wiki. Gluex / hall-d online documentation. Online, 2025. URL: <a class="reference external" href="https://halldweb.jlab.org/wiki">https://halldweb.jlab.org/wiki</a>.</p>
+</div>
+<div class="citation" id="id24" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
+<p>R. Barsotti and M.R. Shepherd. Using machine learning to separate hadronic and electromagnetic interactions in the gluex forward calorimeter. <em>Journal of Instrumentation</em>, 15(05):P05021–P05021, May 2020. URL: <a class="reference external" href="http://dx.doi.org/10.1088/1748-0221/15/05/P05021">http://dx.doi.org/10.1088/1748-0221/15/05/P05021</a>, <a class="reference external" href="https://doi.org/10.1088/1748-0221/15/05/p05021">doi:10.1088/1748-0221/15/05/p05021</a>.</p>
 </div>
 </div>
 </div>

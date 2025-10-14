@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Dataset preparation &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
+    <title>Data Preprocessing &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
   
   
   
@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -57,12 +57,14 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/02-dataset-preparation';</script>
     <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/notebooks/02-dataset-preparation.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="CNN for Classification" href="02-cnn-classification.html" />
-    <link rel="prev" title="The Forward Calorimeter (FCAL) in GlueX" href="../chapters/01-intro-to-fcal.html" />
+    <link rel="next" title="Data Generation" href="02-cnn-classification.html" />
+    <link rel="prev" title="Problem Formulation" href="../chapters/02-problem-description.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -173,10 +175,19 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">CNN for FCAL</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dataset Preparation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/02-problem-description.html">Problem Formulation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-cnn-classification.html">CNN for FCAL Shower Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-cnn-regression.html">CNN for FCAL Shower Regression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-cnn-classification.html">Data Generation</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="02-cnn-regression.html">Data Generation</a></li>
+
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="nav bd-sidenav">
@@ -374,7 +385,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -385,11 +398,34 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Dataset preparation</h1>
+    <h1>Data Preprocessing</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-gun">Particle Gun</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fcalshowers-tree">FCALShowers tree</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-nature-of-fcal-shower-images-and-motivation-for-preprocessing">Sparse Nature of FCAL Shower Images and Motivation for Preprocessing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#patch-construction-and-dataset-preparation">Patch Construction and Dataset Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-1111-energy-patches">1. Building 11×11 Energy Patches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-labels">Creating Labels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#omega-events">Omega Events</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-omegasampletree">Structure of the <code class="docutils literal notranslate"><span class="pre">OmegaSampleTree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Notes</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -399,9 +435,1072 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="dataset-preparation">
-<h1>Dataset preparation<a class="headerlink" href="#dataset-preparation" title="Link to this heading">#</a></h1>
-<p>to be uploaded</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="data-preprocessing">
+<h1>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h1>
+<section id="particle-gun">
+<h2>Particle Gun<a class="headerlink" href="#particle-gun" title="Link to this heading">#</a></h2>
+<p>The dataset is found in <a class="reference external" href="https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/unformatted_dataset/ParticleGunDataSet_800k.root">hugging face dataset</a></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>particle name</p></th>
+<th class="head"><p>momentum range [GeV]</p></th>
+<th class="head"><p>theta (<span class="math notranslate nohighlight">\(\theta\)</span>) range [deg]</p></th>
+<th class="head"><p>phi (<span class="math notranslate nohighlight">\(\phi\)</span>) range [deg]</p></th>
+<th class="head"><p>No Of Events</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\gamma\)</span></p></td>
+<td><p>0.1 - 4.0</p></td>
+<td><p>1 - 11</p></td>
+<td><p>0 - 360</p></td>
+<td><p>500k</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\pi^{+}\)</span></p></td>
+<td><p>0.1 - 4.0</p></td>
+<td><p>1 - 11</p></td>
+<td><p>0 - 360</p></td>
+<td><p>250k</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\pi^{-}\)</span></p></td>
+<td><p>0.1 - 4.0</p></td>
+<td><p>1 - 10</p></td>
+<td><p>0 - 360</p></td>
+<td><p>250k</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="fcalshowers-tree">
+<h3>FCALShowers tree<a class="headerlink" href="#fcalshowers-tree" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">FCALShowers</span></code> tree stores reconstructed and truth-level information for individual showers in the Forward Calorimeter (FCAL).<br />
+Each entry corresponds to one shower and includes both <em>thrown particle kinematics</em> (from Monte Carlo truth) and <em>reconstructed shower quantities</em> derived from detector hits.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Variable Name</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Shape / Count</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thrownPID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Particle ID (PDG code) of the thrown particle generating this shower.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thrownEnergy</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True (thrown) particle energy in GeV.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thrownPosition_fX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>X-coordinate of the thrown particle’s production vertex (cm).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thrownPosition_fY</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Y-coordinate of the thrown particle’s production vertex (cm).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thrownPosition_fZ</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Z-coordinate of the thrown particle’s production vertex (cm).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thrownMomentum_fX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>X-component of the thrown particle momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thrownMomentum_fY</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Y-component of the thrown particle momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">thrownMomentum_fZ</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Z-component of the thrown particle momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thrownMass</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True mass of the thrown particle (GeV/c²).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numBlocks</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Number of FCAL blocks (crystals) contributing to this shower.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">isNearBorder</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Flag indicating whether the shower lies close to the calorimeter edge (can affect reconstruction).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showerE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Total reconstructed energy of the shower (GeV).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showerPos_fX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>X-position of the reconstructed shower centroid (cm).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showerPos_fY</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Y-position of the reconstructed shower centroid (cm).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showerPos_fZ</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Z-position of the reconstructed shower centroid (cm).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nrows</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Number of hit entries in the <code class="docutils literal notranslate"><span class="pre">rows</span></code> array.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rows</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t[]</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Row indices of FCAL cells contributing to the shower.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ncols</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Number of hit entries in the <code class="docutils literal notranslate"><span class="pre">cols</span></code> array (same as <code class="docutils literal notranslate"><span class="pre">nrows</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cols</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t[]</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Column indices of FCAL cells contributing to the shower.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nenergies</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Number of energy values in the <code class="docutils literal notranslate"><span class="pre">energies</span></code> array (same as <code class="docutils literal notranslate"><span class="pre">nrows</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">energies</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double[]</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Energy deposited in each hit cell (GeV).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">isSplitOff</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Flag indicating if this shower is identified as a <em>split-off</em> from a nearby hadronic interaction.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">isPhotonShower</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True if the shower is a ‘good’ photon shower.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="notes">
+<h3>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Arrays (<code class="docutils literal notranslate"><span class="pre">rows</span></code>, <code class="docutils literal notranslate"><span class="pre">cols</span></code>, <code class="docutils literal notranslate"><span class="pre">energies</span></code>) contain per-hit information for the FCAL blocks belonging to that shower.</p></li>
+<li><p>Energy ratios (<code class="docutils literal notranslate"><span class="pre">E1E9</span></code>) – The central crystal to surrounding 3×3 block (used to identify EM vs hadronic showers).</p></li>
+<li><p>Energy ratio (<code class="docutils literal notranslate"><span class="pre">E9E25</span></code>) – The 3×3 vs 5×5 crystal windows around the shower maximum (shower compactness measure)</p></li>
+<li><p>The boolean flags (<code class="docutils literal notranslate"><span class="pre">isSplitOff</span></code>, <code class="docutils literal notranslate"><span class="pre">isPhotonShower</span></code>) are used to build labeled datasets for classification tasks such as photon identification.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thrown*</span></code> quantities provide the Monte Carlo truth-level reference for evaluating reconstruction performance and training regression models.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install uproot awkward-pandas pandas matplotlib seaborn vector tqdm plotly &gt; /dev/null
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DownloadProgressBar</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom TQDM progress bar for urllib downloads.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the progress bar.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            blocks (int): Number of blocks transferred so far.</span>
+<span class="sd">            block_size (int): Size of each block (in bytes).</span>
+<span class="sd">            total_size (int, optional): Total size of the file (in bytes).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">total_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">blocks</span> <span class="o">*</span> <span class="n">block_size</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download a file from a URL into the target directory with progress display.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): Direct URL to the file.</span>
+<span class="sd">        target_dir (str): Directory to save the file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Path to the downloaded (or existing) file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure the target directory exists</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Infer the filename from the URL</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">local_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># If file already exists, skip download</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ File already exists: </span><span class="si">{</span><span class="n">local_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">local_path</span>
+
+    <span class="c1"># Download with progress bar</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⬇️  Downloading </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">DownloadProgressBar</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+        <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">local_path</span><span class="p">,</span> <span class="n">reporthook</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">update_to</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Download complete: </span><span class="si">{</span><span class="n">local_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">local_path</span>
+
+<span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unformatted_particle_data_url</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/unformatted_dataset/ParticleGunDataSet_800k.root&quot;</span>
+
+<span class="n">dataset_path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">unformatted_particle_data_url</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>⬇️  Downloading ParticleGunDataSet_800k.root from https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/unformatted_dataset/ParticleGunDataSet_800k.root
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ParticleGunDataSet_800k.root: 102MB [00:01, 95.2MB/s]                            
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Download complete: data/ParticleGunDataSet_800k.root
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets look into the ALLFCALHits tree of the files,</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uproot</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">dataset_tree</span> <span class="o">=</span> <span class="n">uproot</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">)[</span><span class="s2">&quot;FCALShowers&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">dataset_tree</span><span class="o">.</span><span class="n">branches</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">branch</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="n">branch</span><span class="o">.</span><span class="n">typename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>index of type int64_t
+thrownPID of type int32_t
+thrownEnergy of type double
+thrownPosition_fX of type double
+thrownPosition_fY of type double
+thrownPosition_fZ of type double
+thrownMomentum_fX of type double
+thrownMomentum_fY of type double
+thrownMomentum_fZ of type double
+thrownMass of type double
+numBlocks of type int32_t
+isNearBorder of type bool
+showerE of type double
+showerPos_fX of type double
+showerPos_fY of type double
+showerPos_fZ of type double
+nrows of type int32_t
+rows of type int64_t[]
+ncols of type int32_t
+cols of type int64_t[]
+nenergies of type int32_t
+energies of type double[]
+isSplitOff of type bool
+isPhotonShower of type bool
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">dataset_tree</span><span class="o">.</span><span class="n">arrays</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="s2">&quot;pd&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DataFrame shape: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DataFrame shape: (814151, 24)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Lets look into some of the distributions </span>
+
+<span class="n">photon_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isPhotonShower&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">splitOffs_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isSplitOff&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of photon showers: </span><span class="si">{</span><span class="n">photon_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of split-off showers: </span><span class="si">{</span><span class="n">splitOffs_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hspace&quot;</span><span class="p">:</span> <span class="mf">0.45</span><span class="p">,</span> <span class="s2">&quot;wspace&quot;</span><span class="p">:</span> <span class="mf">0.30</span><span class="p">})</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">photon_df</span><span class="p">[</span><span class="s2">&quot;showerE&quot;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;photons&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">splitOffs_df</span><span class="p">[</span><span class="s2">&quot;showerE&quot;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;splitOffs&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Shower Energy [GeV]&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Normalized Counts&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">photon_df</span><span class="p">[</span><span class="s2">&quot;nrows&quot;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;photons&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">splitOffs_df</span><span class="p">[</span><span class="s2">&quot;nrows&quot;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;splitOffs&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of Hits&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Normalized Counts&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                                                      
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of photon showers: 434845
+Number of split-off showers: 379306
+</pre></div>
+</div>
+<img alt="../_images/421d46d3c4c7715801e768342acc651b1e79f7808216ec5e74500deab332592f.png" src="../_images/421d46d3c4c7715801e768342acc651b1e79f7808216ec5e74500deab332592f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets make a HitMap of all the hits.</span>
+
+<span class="n">FCAL_GEOMETRY</span> <span class="o">=</span> <span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">MakeHitMap</span><span class="p">(</span><span class="n">evnt</span><span class="p">,</span> <span class="n">min_hits</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">evnt</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_hits</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+  <span class="n">matrix_energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">FCAL_GEOMETRY</span><span class="p">)</span>
+  <span class="n">matrix_energies</span><span class="p">[</span><span class="n">evnt</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">evnt</span><span class="o">.</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">evnt</span><span class="o">.</span><span class="n">energies</span>
+  <span class="k">return</span> <span class="n">matrix_energies</span>
+
+<span class="c1"># Lets draw a few images side by side</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;isPhotonShower&quot;</span><span class="p">,</span> <span class="s2">&quot;isSplitOff&quot;</span><span class="p">]</span>
+<span class="n">NROWS</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">NCOLS</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="n">NROWS</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="n">NCOLS</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NROWS</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NCOLS</span><span class="p">):</span>
+    <span class="n">evt</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">NCOLS</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span>
+    <span class="n">hitmap</span> <span class="o">=</span> <span class="n">MakeHitMap</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hitmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">hitmap</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">evt</span><span class="o">.</span><span class="n">isPhotonShower</span><span class="p">:</span>
+      <span class="n">title</span> <span class="o">+=</span> <span class="s2">&quot;PhotonShower&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">title</span> <span class="o">+=</span> <span class="s2">&quot;SplitOff&quot;</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">, E: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">NCOLS</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">showerE</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GeV&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8483b173e001e6a76236a328203333f916668f82d000dc8db68946937bd33773.png" src="../_images/8483b173e001e6a76236a328203333f916668f82d000dc8db68946937bd33773.png" />
+</div>
+</div>
+</section>
+<section id="sparse-nature-of-fcal-shower-images-and-motivation-for-preprocessing">
+<h3>Sparse Nature of FCAL Shower Images and Motivation for Preprocessing<a class="headerlink" href="#sparse-nature-of-fcal-shower-images-and-motivation-for-preprocessing" title="Link to this heading">#</a></h3>
+<p>As can be observed from the raw FCAL shower images, the spatial energy deposition is <strong>highly sparse</strong>.<br />
+Each shower typically consists of only a small number of active cells (often less than ten) within the full calorimeter readout grid (e.g., 59×59). This means that the majority of pixels in these images carry zero or negligible energy, leading to two significant challenges:</p>
+<ol class="arabic simple">
+<li><p><strong>Computational Inefficiency</strong> —<br />
+Large image dimensions dominated by empty pixels increase memory usage and slow down both training and inference without adding useful information.</p></li>
+<li><p><strong>Learning Difficulty</strong> —<br />
+Deep neural networks, particularly convolutional models, rely on spatially distributed correlations in the data. When most of the input space is inactive, learning meaningful spatial patterns becomes statistically inefficient and often requires excessive regularization or larger datasets to generalize well.</p></li>
+</ol>
+<p>To address these challenges, we apply a <strong>preprocessing step</strong> that reduces the spatial extent of each shower image while preserving its physically relevant structure. Specifically, we extract a <strong>localized patch</strong> centered on the maximum-energy cell (the shower core). This region captures the essential shower morphology — including the energy spread and asymmetry — while discarding irrelevant empty space.</p>
+<p>We define this reduced image dimension as <code class="docutils literal notranslate"><span class="pre">PATCH_SIZE</span></code>.<br />
+For example, a <code class="docutils literal notranslate"><span class="pre">PATCH_SIZE</span> <span class="pre">=</span> <span class="pre">11</span></code> corresponds to an 11×11 grid centered on the highest-energy crystal of the shower. This compact representation provides a balance between preserving spatial resolution and improving learning efficiency.</p>
+<p>Because this preprocessing must be applied consistently across all showers, it is implemented programmatically through a vectorized procedure. This ensures uniformity in how patches are extracted and guarantees that each patch remains aligned with its physical shower center.</p>
+</section>
+</section>
+<section id="patch-construction-and-dataset-preparation">
+<h2>Patch Construction and Dataset Preparation<a class="headerlink" href="#patch-construction-and-dataset-preparation" title="Link to this heading">#</a></h2>
+<p>In this section, lets see how we can construct the <em>localized energy patches</em> from the Forward Calorimeter (FCAL) hit data and organize them into an HDF5 dataset suitable for training machine-learning models.</p>
+<p>Each FCAL shower consists of a collection of calorimeter cell hits, each hit defined by its grid coordinates <code class="docutils literal notranslate"><span class="pre">(row,</span> <span class="pre">col)</span></code> and deposited energy. The goal is to convert these irregular hit patterns into fixed-size <strong>11×11 image patches</strong> centered on the highest-energy cell in each shower. These patches serve as compact spatial representations of shower shapes that can be directly used as CNN inputs.</p>
+<hr class="docutils" />
+<section id="building-1111-energy-patches">
+<h3>1. Building 11×11 Energy Patches<a class="headerlink" href="#building-1111-energy-patches" title="Link to this heading">#</a></h3>
+<p>The function <code class="docutils literal notranslate"><span class="pre">make_patches_vectorized()</span></code> takes as input the lists of hit rows, columns, and energies for each shower and performs the following steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Padding and Masking</strong></p>
+<ul class="simple">
+<li><p>Because each shower has a variable number of hits, we first pad all showers to the same maximum length using zero-filled arrays.</p></li>
+<li><p>We also build a boolean <code class="docutils literal notranslate"><span class="pre">mask</span></code> array to keep track of which elements are real hits and which are padding.</p></li>
+</ul>
+</li>
+<li><p><strong>Finding the Shower Center</strong></p>
+<ul class="simple">
+<li><p>For each shower, the cell with the maximum deposited energy is identified.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">(row,</span> <span class="pre">col)</span></code> of this maximum-energy cell is taken as the <strong>center</strong> of the 11×11 patch.</p></li>
+</ul>
+</li>
+<li><p><strong>Computing Relative Coordinates</strong></p>
+<ul class="simple">
+<li><p>Each hit’s position is shifted relative to the center so that the central cell maps to <code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">5)</span></code> in the 11×11 window (since <code class="docutils literal notranslate"><span class="pre">patch_size</span> <span class="pre">=</span> <span class="pre">11</span></code> and <code class="docutils literal notranslate"><span class="pre">half</span> <span class="pre">=</span> <span class="pre">5</span></code>).</p></li>
+</ul>
+</li>
+<li><p><strong>Selecting Valid Hits</strong></p>
+<ul class="simple">
+<li><p>Hits that fall outside the 11×11 window boundaries are discarded.</p></li>
+<li><p>The remaining hits are “valid” and will contribute energy to the patch.</p></li>
+</ul>
+</li>
+<li><p><strong>Filling the Patch</strong></p>
+<ul class="simple">
+<li><p>Using NumPy’s <code class="docutils literal notranslate"><span class="pre">np.add.at()</span></code> (which supports indexed accumulation), each valid hit’s energy is added to its corresponding pixel location <code class="docutils literal notranslate"><span class="pre">(r,</span> <span class="pre">c)</span></code> within the 11×11 array for that shower.</p></li>
+</ul>
+</li>
+<li><p><strong>Returning the Patch Array</strong></p>
+<ul class="simple">
+<li><p>The output is an array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">11,</span> <span class="pre">11)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of showers.</p></li>
+<li><p>Each entry is an image-like representation of an FCAL shower’s energy deposition pattern.</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_patches_vectorized</span><span class="p">(</span><span class="n">rows_list</span><span class="p">,</span> <span class="n">cols_list</span><span class="p">,</span> <span class="n">energies_list</span><span class="p">,</span> <span class="n">patch_size</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
+    <span class="n">n_showers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_list</span><span class="p">)</span>
+    <span class="n">max_hits</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows_list</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">patch_size</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="c1"># Pad all to same length</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_showers</span><span class="p">,</span> <span class="n">max_hits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_showers</span><span class="p">,</span> <span class="n">max_hits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_showers</span><span class="p">,</span> <span class="n">max_hits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_showers</span><span class="p">,</span> <span class="n">max_hits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">rows_list</span><span class="p">,</span> <span class="n">cols_list</span><span class="p">,</span> <span class="n">energies_list</span><span class="p">)):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+        <span class="n">energies</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Find center of each shower (max energy cell)</span>
+    <span class="n">idx_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">centers_r</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_showers</span><span class="p">),</span> <span class="n">idx_max</span><span class="p">]</span>
+    <span class="n">centers_c</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_showers</span><span class="p">),</span> <span class="n">idx_max</span><span class="p">]</span>
+
+    <span class="c1"># Compute relative coordinates for all hits</span>
+    <span class="n">rel_r</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">-</span> <span class="n">centers_r</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">half</span>
+    <span class="n">rel_c</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">-</span> <span class="n">centers_c</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">half</span>
+
+    <span class="c1"># Keep only hits that fall within the 11x11 window</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">mask</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_r</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_r</span> <span class="o">&lt;</span> <span class="n">patch_size</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_c</span> <span class="o">&lt;</span> <span class="n">patch_size</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Now build all patches (vectorized accumulation)</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_showers</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="c1"># Flatten for easy advanced indexing</span>
+    <span class="n">shower_idx</span><span class="p">,</span> <span class="n">hit_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+    <span class="n">rr</span> <span class="o">=</span> <span class="n">rel_r</span><span class="p">[</span><span class="n">shower_idx</span><span class="p">,</span> <span class="n">hit_idx</span><span class="p">]</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="n">rel_c</span><span class="p">[</span><span class="n">shower_idx</span><span class="p">,</span> <span class="n">hit_idx</span><span class="p">]</span>
+    <span class="n">ee</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="n">shower_idx</span><span class="p">,</span> <span class="n">hit_idx</span><span class="p">]</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">patches</span><span class="p">,</span> <span class="p">(</span><span class="n">shower_idx</span><span class="p">,</span> <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">),</span> <span class="n">ee</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">patches</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patches</span> <span class="o">=</span> <span class="n">make_patches_vectorized</span><span class="p">(</span>
+    <span class="n">rows_list</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">],</span>
+    <span class="n">cols_list</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;cols&quot;</span><span class="p">],</span>
+    <span class="n">energies_list</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;energies&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="c1"># -&gt; (nShowers, 11, 11)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;patches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(814151, 11, 11)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="creating-labels">
+<h3>Creating Labels<a class="headerlink" href="#creating-labels" title="Link to this heading">#</a></h3>
+<p>Each shower in the dataset is labeled according to its origin:</p>
+<ul class="simple">
+<li><p><strong>1</strong> – Photon Shower (true electromagnetic)</p></li>
+<li><p><strong>0</strong> – Split-off Shower (hadronic secondary)</p></li>
+<li><p><strong>-1</strong> – Others or undefined (This should never happen in this case)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;isPhotonShower&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;isSplitOff&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">&quot;isPhotonShower&quot;</span><span class="p">,</span> <span class="s2">&quot;isSplitOff&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>        isPhotonShower  isSplitOff  labels
+814141            True       False       1
+814142            True       False       1
+814143            True       False       1
+814144            True       False       1
+814145            True       False       1
+814146           False        True       0
+814147           False        True       0
+814148            True       False       1
+814149           False        True       0
+814150            True       False       1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="c1"># lets pick random 25 showers</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">titleDict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;SplitOff&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;PhotonShower&quot;</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()):</span>
+  <span class="n">idx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+  <span class="n">title</span> <span class="o">=</span> <span class="n">titleDict</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">, E: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">showerE</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GeV&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5119274c0b86725ebc7cb9b9fce25ab06193b314309ff1edd86e605080e9249e.png" src="../_images/5119274c0b86725ebc7cb9b9fce25ab06193b314309ff1edd86e605080e9249e.png" />
+</div>
+</div>
+<p>Now, we can save the images as a <code class="docutils literal notranslate"><span class="pre">.h5</span></code> file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Assume these already exist:</span>
+<span class="c1"># patches: shape (N, 11, 11)</span>
+<span class="c1"># labels:  shape (N,)          -&gt; e.g., 0 for photon, 1 for splitOff</span>
+<span class="c1"># showerE: shape (N,)</span>
+<span class="c1"># thrownE: shape (N,)</span>
+
+<span class="n">output_path</span> <span class="o">=</span> <span class="s2">&quot;CNN4FCAL_PATCHSIZE_11.h5&quot;</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="c1"># Create datasets</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;patches&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">patches</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;gzip&quot;</span><span class="p">,</span> <span class="n">compression_opts</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;showerE&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;showerE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;thrownE&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;thrownEnergy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+    <span class="c1"># Add some metadata</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GlueX FCAL 11x11 patches centered on max-energy cell&quot;</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;label_mapping&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;{0: splitOff, 1: photon}&quot;</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;patch_shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Saved dataset with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Saved dataset with 814151 entries to CNN4FCAL_PATCHSIZE_11.h5
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="omega-events">
+<h2>Omega Events<a class="headerlink" href="#omega-events" title="Link to this heading">#</a></h2>
+<p>This Dataset contains Monte Carlo and reconstructed information for exclusive <span class="math notranslate nohighlight">\(\omega\)</span> (omega) production events in the GlueX detector.<br />
+The data are stored in the tree <strong><code class="docutils literal notranslate"><span class="pre">OmegaSampleTree</span></code></strong>, which organizes both <em>truth-level (thrown)</em> and <em>reconstructed</em> particle kinematics, as well as calorimeter-level information from the Forward Calorimeter (FCAL).</p>
+<p>The dataset is designed to support studies of photon reconstruction, FCAL shower modeling, and the development of fast simulation and machine learning pipelines.</p>
+<hr class="docutils" />
+<section id="structure-of-the-omegasampletree">
+<h3>Structure of the <code class="docutils literal notranslate"><span class="pre">OmegaSampleTree</span></code><a class="headerlink" href="#structure-of-the-omegasampletree" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Variable Name</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Shape / Count</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>thrownPiPlus</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True (Monte Carlo) four-momentum of the generated π⁺ in the ω → π⁺π⁻π⁰ decay.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>thrownPiMinus</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True four-momentum of the generated π⁻.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>thrownRecoilProton</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True four-momentum of the recoil proton.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>thrownPi0</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True four-momentum of the neutral pion (π⁰) from ω decay.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>reconPiPlus</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Reconstructed four-momentum of the π⁺ track, based on detector tracking and kinematic fit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>reconPiMinus</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Reconstructed four-momentum of the π⁻ track.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>reconRecoilProton</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Reconstructed four-momentum of the recoil proton.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>thrownBeam</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TLorentzVector</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Four-momentum of the incident beam photon (used in MC generation).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>thrownOmegaMass</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">double</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>True invariant mass of the ω meson (from generated kinematics).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>rows</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;int32_t&gt;</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Row indices of FCAL cells contributing to all neutral showers in the event.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>cols</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;int32_t&gt;</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Column indices of FCAL cells corresponding to the same hits as <code class="docutils literal notranslate"><span class="pre">rows</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>energies</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Energy deposits (in GeV) for each FCAL hit cell.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>times</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Variable-length</p></td>
+<td><p>Time (in ns) of each FCAL hit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nShowers</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td><p>Scalar</p></td>
+<td><p>Number of reconstructed neutral showers in the FCAL for this event.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>showerT</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Reconstructed timing of each neutral shower.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>numBlocks</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;int32_t&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Number of calorimeter blocks contributing to each shower.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>showerE</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Reconstructed energy (GeV) of each neutral shower.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>sumU</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Longitudinal energy-weighted position moment along FCAL local U-axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>sumV</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Longitudinal energy-weighted position moment along FCAL local V-axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>E9E25</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Ratio of 3×3 to 5×5 energy sums around the shower core (shower compactness metric).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>E1E9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Ratio of central block energy to surrounding 3×3 block sum (used for photon/hadron separation).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nHitsPerShower</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;int32_t&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Number of individual FCAL hits associated with each shower.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>startIndexPerShower</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;int32_t&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Starting index of each shower’s hits in the flattened <code class="docutils literal notranslate"><span class="pre">rows</span></code>, <code class="docutils literal notranslate"><span class="pre">cols</span></code>, <code class="docutils literal notranslate"><span class="pre">energies</span></code> arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>FCALNeutralShowerPx</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>x-component of reconstructed shower momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>FCALNeutralShowerPy</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>y-component of reconstructed shower momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>FCALNeutralShowerPz</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>z-component of reconstructed shower momentum (GeV/c).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>FCALNeutralShowerE</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::vector&lt;double&gt;</span></code></p></td>
+<td><p>Length = <code class="docutils literal notranslate"><span class="pre">nShowers</span></code></p></td>
+<td><p>Energy of each reconstructed neutral shower (GeV).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id1">
+<h3>Notes<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Thrown quantities</strong> correspond to generator-level (true) values from the ω → π⁺π⁻π⁰ decay simulation.</p></li>
+<li><p><strong>Reconstructed quantities</strong> are obtained from detector-level reconstruction and tracking algorithms (as implemented in <em>halld_recon</em>).</p></li>
+<li><p>The <strong>FCAL hit-level data</strong> (<code class="docutils literal notranslate"><span class="pre">rows</span></code>, <code class="docutils literal notranslate"><span class="pre">cols</span></code>, <code class="docutils literal notranslate"><span class="pre">energies</span></code>, <code class="docutils literal notranslate"><span class="pre">times</span></code>) represent all hits contributing to the FCAL neutral showers.<br />
+Each shower can be reassembled using the <code class="docutils literal notranslate"><span class="pre">startIndexPerShower</span></code> and <code class="docutils literal notranslate"><span class="pre">nHitsPerShower</span></code> vectors.</p></li>
+<li><p>The <strong>energy ratios (<code class="docutils literal notranslate"><span class="pre">E1E9</span></code>, <code class="docutils literal notranslate"><span class="pre">E9E25</span></code>)</strong> and spatial moments (<code class="docutils literal notranslate"><span class="pre">sumU</span></code>, <code class="docutils literal notranslate"><span class="pre">sumV</span></code>) are useful for distinguishing electromagnetic showers from hadronic split-offs.</p></li>
+<li><p>This dataset serves as a bridge between <em>physics-level information</em> (π⁰ reconstruction in ω decays) and <em>detector-level observables</em> (FCAL hit maps), enabling both <strong>classification</strong> and <strong>generative simulation</strong> tasks.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets download the unformatted omega dataset</span>
+
+<span class="n">unformatted_omega_data_url</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/unformatted_dataset/OmegaExclusive_100k.root&quot;</span>
+<span class="n">omega_dataset_path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">unformatted_omega_data_url</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>⬇️  Downloading OmegaExclusive_100k.root from https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/unformatted_dataset/OmegaExclusive_100k.root
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OmegaExclusive_100k.root: 86.0MB [00:01, 75.1MB/s]                            
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Download complete: data/OmegaExclusive_100k.root
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets try with Omega</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">uproot</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">awkward</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ak</span><span class="o">,</span><span class="w"> </span><span class="nn">vector</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">vector</span><span class="o">.</span><span class="n">register_awkward</span><span class="p">()</span>
+
+
+<span class="n">omega_tree</span> <span class="o">=</span> <span class="n">uproot</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">omega_dataset_path</span><span class="p">)[</span><span class="s2">&quot;OmegaSampleTree&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">omega_tree</span><span class="o">.</span><span class="n">branches</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">branch</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="n">branch</span><span class="o">.</span><span class="n">typename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>thrownPiPlus of type TLorentzVector
+thrownPiMinus of type TLorentzVector
+thrownRecoilProton of type TLorentzVector
+thrownPi0 of type TLorentzVector
+reconPiPlus of type TLorentzVector
+reconPiMinus of type TLorentzVector
+reconRecoilProton of type TLorentzVector
+thrownBeam of type TLorentzVector
+thrownOmegaMass of type double
+rows of type std::vector&lt;int32_t&gt;
+cols of type std::vector&lt;int32_t&gt;
+energies of type std::vector&lt;double&gt;
+times of type std::vector&lt;double&gt;
+nShowers of type int32_t
+showerT of type std::vector&lt;double&gt;
+numBlocks of type std::vector&lt;int32_t&gt;
+showerE of type std::vector&lt;double&gt;
+sumU of type std::vector&lt;double&gt;
+sumV of type std::vector&lt;double&gt;
+E9E25 of type std::vector&lt;double&gt;
+E1E9 of type std::vector&lt;double&gt;
+nHitsPerShower of type std::vector&lt;int32_t&gt;
+startIndexPerShower of type std::vector&lt;int32_t&gt;
+FCALNeutralShowerPx of type std::vector&lt;double&gt;
+FCALNeutralShowerPy of type std::vector&lt;double&gt;
+FCALNeutralShowerPz of type std::vector&lt;double&gt;
+FCALNeutralShowerE of type std::vector&lt;double&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">omega_df</span> <span class="o">=</span> <span class="n">omega_tree</span><span class="o">.</span><span class="n">arrays</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="s2">&quot;pd&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets go through events and makeShowerHitMaps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">MakeShowerHitMaps</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FCAL_GEOM</span> <span class="o">=</span> <span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+  <span class="n">nShowers</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">nShowers</span>
+  <span class="n">matrix_energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nShowers</span><span class="p">,</span> <span class="o">*</span><span class="n">FCAL_GEOM</span><span class="p">))</span>
+  <span class="n">FourVectors</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nShowers</span><span class="p">):</span>
+    <span class="n">start_idx</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">startIndexPerShower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">end_idx</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="n">event</span><span class="o">.</span><span class="n">nHitsPerShower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">matrix_energies</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">rows</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">],</span> <span class="n">event</span><span class="o">.</span><span class="n">cols</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">energies</span> <span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span>
+    <span class="c1"># lets make a radius and center of shower to draw it.</span>
+    <span class="n">lorentzVector</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">obj</span><span class="p">(</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">pz</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPz</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerE</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">FourVectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lorentzVector</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hitmap&quot;</span> <span class="p">:</span> <span class="n">matrix_energies</span><span class="p">,</span> <span class="s2">&quot;4vector&quot;</span> <span class="p">:</span>  <span class="n">FourVectors</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">makeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FCAL_GEOM</span> <span class="o">=</span> <span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="mi">59</span><span class="p">)):</span>
+  <span class="n">hitMapDict</span> <span class="o">=</span> <span class="n">MakeShowerHitMaps</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FCAL_GEOM</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hitMapDict</span><span class="p">[</span><span class="s2">&quot;hitmap&quot;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">),</span> <span class="n">event</span><span class="o">.</span><span class="n">nShowers</span>
+
+<span class="n">max_events</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">events</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;hitmap&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;nShowers&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">omega_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+  <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">max_events</span><span class="p">:</span> <span class="k">break</span>
+  <span class="n">m</span><span class="p">,</span> <span class="n">nshower</span> <span class="o">=</span> <span class="n">makeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+  <span class="n">events</span><span class="p">[</span><span class="s1">&#39;hitmap&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+  <span class="n">events</span><span class="p">[</span><span class="s1">&#39;nShowers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nshower</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()):</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;hitmap&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">,</span> <span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;lower&quot;</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# neutral showers = </span><span class="si">{</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;nShowers&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ffd70cc48b113b9dd37a86fab58acbdef8a2749d636e53c422fbff7582138eeb.png" src="../_images/ffd70cc48b113b9dd37a86fab58acbdef8a2749d636e53c422fbff7582138eeb.png" />
+</div>
+</div>
+<p>The objective here is to identify good photon like showers from these events and then use it to reconstruct the kinematics of <span class="math notranslate nohighlight">\(\pi^{0}\)</span> and the <span class="math notranslate nohighlight">\(\omega\)</span>. For ease of use, Let us format the this information for event as</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>OmegaExclusive.h5
+│
+├──<span class="w"> </span>event_000001/
+│<span class="w">   </span>├──<span class="w"> </span>piPlus_p4<span class="w">        </span>→<span class="w"> </span><span class="o">(</span><span class="m">4</span>,<span class="o">)</span><span class="w">         </span><span class="o">[</span>px,<span class="w"> </span>py,<span class="w"> </span>pz,<span class="w"> </span>E<span class="o">]</span>
+│<span class="w">   </span>├──<span class="w"> </span>piMinus_p4<span class="w">       </span>→<span class="w"> </span><span class="o">(</span><span class="m">4</span>,<span class="o">)</span>
+│<span class="w">   </span>├──<span class="w"> </span>recoilProton_p4<span class="w">  </span>→<span class="w"> </span><span class="o">(</span><span class="m">4</span>,<span class="o">)</span>
+│<span class="w">   </span>├──<span class="w"> </span>beam_p4<span class="w">          </span>→<span class="w"> </span><span class="o">(</span><span class="m">4</span>,<span class="o">)</span>
+│<span class="w">   </span>├──<span class="w"> </span>nShowers<span class="w">         </span>→<span class="w"> </span><span class="o">(</span><span class="m">1</span>,<span class="o">)</span>
+│<span class="w">   </span>├──<span class="w"> </span>shower_p4<span class="w">        </span>→<span class="w"> </span><span class="o">(</span>nShowers,<span class="w"> </span><span class="m">4</span><span class="o">)</span>
+│<span class="w">   </span>├──<span class="w"> </span>shower_patches<span class="w">   </span>→<span class="w"> </span><span class="o">(</span>nShowers,<span class="w"> </span><span class="m">11</span>,<span class="w"> </span><span class="m">11</span><span class="o">)</span>
+│
+├──<span class="w"> </span>event_000002/
+│<span class="w">   </span>├──<span class="w"> </span>...
+│
+└──<span class="w"> </span>metadata/
+<span class="w">    </span>├──<span class="w"> </span>description<span class="w">      </span>→<span class="w"> </span><span class="s2">&quot;Omega Exclusive events with FCAL shower patches&quot;</span>
+<span class="w">    </span>├──<span class="w"> </span>patch_shape<span class="w">      </span>→<span class="w"> </span><span class="o">(</span><span class="m">11</span>,<span class="w"> </span><span class="m">11</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_event_patches</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span>
+                       <span class="n">nHitsPerShower</span><span class="p">,</span> <span class="n">startIndexPerShower</span><span class="p">,</span>
+                       <span class="n">patch_size</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build (nShowers, patch_size, patch_size) patches for a single event.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rows, cols : 1D np.ndarray (int)</span>
+<span class="sd">        Flattened FCAL hit coordinates for the event; hits are grouped</span>
+<span class="sd">        contiguously per shower.</span>
+<span class="sd">    energies : 1D np.ndarray (float)</span>
+<span class="sd">        Flattened FCAL hit energies aligned with `rows`/`cols`.</span>
+<span class="sd">    nHitsPerShower : 1D np.ndarray (int)</span>
+<span class="sd">        Number of hits for each shower (length = nShowers).</span>
+<span class="sd">    startIndexPerShower : 1D np.ndarray (int)</span>
+<span class="sd">        Starting index in the flattened arrays for each shower (length = nShowers).</span>
+<span class="sd">    patch_size : int, default=11</span>
+<span class="sd">        Side length of the square patch to construct (e.g., 11 → 11x11).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    patches : np.ndarray, shape = (nShowers, patch_size, patch_size), dtype=float32</span>
+<span class="sd">        Energy patches centered on each shower’s max-energy hit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Basic checks</span>
+    <span class="k">assert</span> <span class="n">rows</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">cols</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">energies</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+    <span class="n">nShowers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nHitsPerShower</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">startIndexPerShower</span><span class="p">)</span> <span class="o">==</span> <span class="n">nShowers</span>
+
+    <span class="n">half</span> <span class="o">=</span> <span class="n">patch_size</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nShowers</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># Build per-hit shower IDs: [0,0,...(nHits0 times), 1,1,...(nHits1 times), ...]</span>
+    <span class="n">shower_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nShowers</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="n">nHitsPerShower</span><span class="p">)</span>
+
+    <span class="c1"># Find the max-energy hit (center) for each shower</span>
+    <span class="n">centers_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nShowers</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">centers_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nShowers</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="c1"># Tiny loop over showers to locate the center index precisely</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nShowers</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startIndexPerShower</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">nHitsPerShower</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;=</span> <span class="n">start</span><span class="p">:</span>  <span class="c1"># empty shower guard (shouldn&#39;t happen, but be safe)</span>
+            <span class="n">centers_r</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">centers_c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Warning: empty shower encountered.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">local_energies</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">local_argmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">local_energies</span><span class="p">)</span>
+        <span class="n">idx_max</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">local_argmax</span>
+        <span class="n">centers_r</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="n">idx_max</span><span class="p">]</span>
+        <span class="n">centers_c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">idx_max</span><span class="p">]</span>
+
+    <span class="c1"># Vectorized relative coordinates for all hits</span>
+    <span class="n">rel_r</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">-</span> <span class="n">centers_r</span><span class="p">[</span><span class="n">shower_ids</span><span class="p">]</span> <span class="o">+</span> <span class="n">half</span>
+    <span class="n">rel_c</span> <span class="o">=</span> <span class="n">cols</span> <span class="o">-</span> <span class="n">centers_c</span><span class="p">[</span><span class="n">shower_ids</span><span class="p">]</span> <span class="o">+</span> <span class="n">half</span>
+
+    <span class="c1"># Keep hits that fall inside the patch bounds</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">rel_r</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_r</span> <span class="o">&lt;</span> <span class="n">patch_size</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">rel_c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rel_c</span> <span class="o">&lt;</span> <span class="n">patch_size</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Accumulate energies into patches</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span>
+        <span class="n">patches</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">shower_ids</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">rel_r</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">rel_c</span><span class="p">[</span><span class="n">valid</span><span class="p">]),</span>
+        <span class="n">energies</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">patches</span>
+
+<span class="c1"># Test on first event</span>
+<span class="n">test_event</span> <span class="o">=</span> <span class="n">omega_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">patches</span> <span class="o">=</span> <span class="n">make_event_patches</span><span class="p">(</span>
+    <span class="n">rows</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+    <span class="n">cols</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+    <span class="n">energies</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+    <span class="n">nHitsPerShower</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;nHitsPerShower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+    <span class="n">startIndexPerShower</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;startIndexPerShower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># -&gt; (nShowers, 11, 11)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(7, 11, 11)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x14a2f55cab40&gt;
+</pre></div>
+</div>
+<img alt="../_images/6e57c9b59d7f6bce2e63e3ae9e47ab2b8f99c4458beaa8631aa95a5904a326da.png" src="../_images/6e57c9b59d7f6bce2e63e3ae9e47ab2b8f99c4458beaa8631aa95a5904a326da.png" />
+</div>
+</div>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -435,12 +1534,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../chapters/01-intro-to-fcal.html"
+       href="../chapters/02-problem-description.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">The Forward Calorimeter (FCAL) in GlueX</p>
+        <p class="prev-next-title">Problem Formulation</p>
       </div>
     </a>
     <a class="right-next"
@@ -448,7 +1547,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">CNN for Classification</p>
+        <p class="prev-next-title">Data Generation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -458,6 +1557,36 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-gun">Particle Gun</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fcalshowers-tree">FCALShowers tree</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-nature-of-fcal-shower-images-and-motivation-for-preprocessing">Sparse Nature of FCAL Shower Images and Motivation for Preprocessing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#patch-construction-and-dataset-preparation">Patch Construction and Dataset Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-1111-energy-patches">1. Building 11×11 Energy Patches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-labels">Creating Labels</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#omega-events">Omega Events</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-omegasampletree">Structure of the <code class="docutils literal notranslate"><span class="pre">OmegaSampleTree</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Notes</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

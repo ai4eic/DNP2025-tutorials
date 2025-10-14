@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Problem Formulation &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/02-problem-description';</script>
+    <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/chapters/02-problem-description.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Preprocessing" href="../notebooks/02-dataset-preparation.html" />
+    <link rel="prev" title="The Forward Calorimeter (FCAL) in GlueX" href="01-intro-to-fcal.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../landing_page.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-intro-to-gluex.html">Introduction to GlueX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-intro-to-fcal.html">Introduction to FCAL</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CNN for FCAL</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-dataset-preparation.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-classification.html">Data Generation</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/02-cnn-regression.html">Data Generation</a></li>
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/03-gan-generation.html">GAN Generation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CNN_DNP2025_01.html">Primer for CNN using `PyTorch`</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/ai4eic/DNP2025-tutorials" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/edit/main/chapters/02-problem-description.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/issues/new?title=Issue%20on%20page%20%2Fchapters/02-problem-description.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/02-problem-description.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Problem Formulation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-and-dataset-creation">Pipeline and Dataset Creation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-gun-sample">Particle Gun Sample</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#omega-exclusive-sample">Omega Exclusive Sample</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-behavior-consideration">CNN Behavior Consideration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-dataset-pipeline">Summary of the Dataset Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-sample-event">A sample Event</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="problem-formulation">
+<h1>Problem Formulation<a class="headerlink" href="#problem-formulation" title="Link to this heading">#</a></h1>
+<p>The Forward Calorimeter (FCAL) in the GlueX detector is an electromagnetic (EM) calorimeter located downstream of the target. It is designed primarily to measure the energies and positions of photons and electrons by absorbing their energy in dense lead-glass blocks. When a photon or electron enters the FCAL, it initiates an electromagnetic shower — a cascade of secondary photons, electrons, and positrons — that deposit energy across several adjacent calorimeter cells.</p>
+<p>In contrast, hadronic particles (such as <span class="math notranslate nohighlight">\(\pi^{+}\)</span>, <span class="math notranslate nohighlight">\(\pi^{-}\)</span>, protons, or neutrons) interact via both electromagnetic and strong interactions, leading to more complex and less localized energy deposition patterns. These interactions can produce <strong>hadronic split-offs</strong>, i.e., secondary interactions in which a single charged hadron produces additional neutral secondaries (such as <span class="math notranslate nohighlight">\(\pi^{0}\)</span> or <span class="math notranslate nohighlight">\(\gamma\)</span>) that create <strong>separate electromagnetic-like showers</strong> in the calorimeter.</p>
+<p>A single charged particle traversing the detector can therefore give rise to <strong>multiple reconstructed showers</strong>:</p>
+<ul class="simple">
+<li><p>One shower typically associated with the charged track (track-matched shower).</p></li>
+<li><p>Additional showers, arising from split-offs, that are not associated with any charged track.</p></li>
+</ul>
+<p>By convention, <strong>showers that are not matched to a reconstructed track</strong> are classified as <em>neutral showers</em>. These include:</p>
+<ul class="simple">
+<li><p><strong>True photon showers</strong>, originating from neutral particles in the event (e.g., from π⁰ → γγ decays).</p></li>
+<li><p><strong>Split-off showers</strong>, arising from secondary hadronic interactions.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="problem-definition">
+<h2>Problem Definition<a class="headerlink" href="#problem-definition" title="Link to this heading">#</a></h2>
+<p>The key challenge addressed here is to <strong>discriminate true photon showers from hadronic split-off showers</strong> in the FCAL.</p>
+<p>Given the <em>hit-level information</em> of a reconstructed neutral shower — specifically the pattern of energy deposits across FCAL cells (rows, columns, and deposited energies) — we seek to train a <strong>Convolutional Neural Network (CNN)</strong> that can classify each neutral shower as either:</p>
+<ul class="simple">
+<li><p><strong>Photon</strong> (good EM shower), or</p></li>
+<li><p><strong>Split-off</strong> (hadronic contamination).</p></li>
+</ul>
+<p>Formally, the task can be defined as a binary classification problem:</p>
+<p><span class="math notranslate nohighlight">\(
+f(\text{hit map}) \rightarrow \{0, 1\}
+\)</span></p>
+<p>where <code class="docutils literal notranslate"><span class="pre">0</span></code> denotes <em>split-off</em> and <code class="docutils literal notranslate"><span class="pre">1</span></code> denotes <em>photon</em>.</p>
+</section>
+<hr class="docutils" />
+<section id="pipeline-and-dataset-creation">
+<h2>Pipeline and Dataset Creation<a class="headerlink" href="#pipeline-and-dataset-creation" title="Link to this heading">#</a></h2>
+<p>The data preparation pipeline consists of two main stages:</p>
+<ol class="arabic simple">
+<li><p><strong>Training Dataset (Particle Gun Sample)</strong><br />
+Generate single-particle events (γ, π⁺, π⁻) using the GlueX Monte Carlo simulation chain. Each event produces one or more FCAL showers, which are labeled according to the particle type and whether the shower is matched to a track or not. These labeled samples are used to train the CNN classifier.</p></li>
+<li><p><strong>Testing Dataset (Physics Reaction: ω → π⁺ π⁻ π⁰)</strong><br />
+Generate exclusive ω production events where π⁰ decays into two photons. The CNN trained on the particle-gun dataset is then applied to identify good photon showers in these realistic multi-particle events.</p></li>
+</ol>
+<hr class="docutils" />
+<section id="particle-gun-sample">
+<h3>Particle Gun Sample<a class="headerlink" href="#particle-gun-sample" title="Link to this heading">#</a></h3>
+<p>To generate a clean and controlled dataset, single-particle events are produced using the GlueX <em>particle gun</em> generators. The generated particles are uniformly sampled within specific kinematic ranges, ensuring coverage of the FCAL acceptance (1°–11° in polar angle).</p>
+<p>The generated kinematic configuration is summarized below:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Particle Name</p></th>
+<th class="head"><p>Momentum Range [GeV]</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\theta\)</span> Range [deg]</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\phi\)</span> Range [deg]</p></th>
+<th class="head"><p>No. of Events</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\gamma\)</span> (Photon)</p></td>
+<td><p>0.1 – 4.0</p></td>
+<td><p>1 – 11</p></td>
+<td><p>0 – 360</p></td>
+<td><p>500k</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\pi^{+}\)</span></p></td>
+<td><p>0.1 – 4.0</p></td>
+<td><p>1 – 11</p></td>
+<td><p>0 – 360</p></td>
+<td><p>250k</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\pi^{-}\)</span></p></td>
+<td><p>0.1 – 4.0</p></td>
+<td><p>1 – 11</p></td>
+<td><p>0 – 360</p></td>
+<td><p>250k</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each event is simulated through the full GlueX detector response (HDGeant4), and reconstructed using the standard <code class="docutils literal notranslate"><span class="pre">halld_recon</span></code> pipeline.<br />
+From the reconstructed data:</p>
+<ul class="simple">
+<li><p>Showers <strong>matched to charged tracks</strong> are labeled as <em>hadronic showers</em>.</p></li>
+<li><p>Neutral showers (no track match) are further labeled as <em>photon</em> or <em>split-off</em>, depending on the thrown particle and reconstruction.</p></li>
+</ul>
+<p>This dataset provides the supervised labels needed to train the CNN on spatial energy patterns (row, column, energy).</p>
+</section>
+<hr class="docutils" />
+<section id="omega-exclusive-sample">
+<h3>Omega Exclusive Sample<a class="headerlink" href="#omega-exclusive-sample" title="Link to this heading">#</a></h3>
+<p>For realistic evaluation, we use the exclusive <span class="math notranslate nohighlight">\(\omega\)</span> production process:</p>
+<p><span class="math notranslate nohighlight">\(
+\gamma p \rightarrow p \, \omega \rightarrow p \, (\pi^+ \pi^- \pi^0) \rightarrow p \, (\pi^+ \pi^- \gamma_1 \gamma_2)
+\)</span></p>
+<p>This sample is generated using the <strong><code class="docutils literal notranslate"><span class="pre">gen_omega_3pi</span></code></strong> event generator.<br />
+Kinematic conditions are chosen to ensure that at least one of the charged pions (<span class="math notranslate nohighlight">\(\pi^{+}\)</span> or <span class="math notranslate nohighlight">\(\pi^{-}\)</span>) and at least one photon from <span class="math notranslate nohighlight">\(\pi^{0}\)</span> decay are within the FCAL acceptance.</p>
+<p>Event-level selection criteria:</p>
+<ul class="simple">
+<li><p>Events must have <strong>exactly three reconstructed charged tracks</strong> corresponding to p, <span class="math notranslate nohighlight">\(\pi^{+}\)</span>, and <span class="math notranslate nohighlight">\(\pi^{-}\)</span>.</p></li>
+<li><p>At least two <strong>neutral showers</strong> reconstructed in the FCAL.</p></li>
+<li><p>Reconstructed track momenta are assumed to be well-measured (perfect tracking approximation).</p></li>
+</ul>
+<p>In real reconstructed <span class="math notranslate nohighlight">\(\omega\)</span> events, the FCAL typically contains <strong>more than two neutral showers</strong> due to hadronic split-offs or secondary interactions.<br />
+The CNN is therefore used to classify each neutral shower as <em>good photon</em> or <em>split-off</em>.</p>
+</section>
+<section id="cnn-behavior-consideration">
+<h3>CNN Behavior Consideration<a class="headerlink" href="#cnn-behavior-consideration" title="Link to this heading">#</a></h3>
+<p>Since the CNN operates independently on each shower:</p>
+<ul class="simple">
+<li><p>It may <strong>predict more than two</strong> good photon showers per event, or <strong>fewer than two</strong>.</p></li>
+<li><p>This behavior must be handled during event reconstruction by selecting the <strong>two highest-confidence photon predictions</strong> for subsequent <span class="math notranslate nohighlight">\(\pi^{0}\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span> reconstruction.</p></li>
+</ul>
+<p>This step ensures consistent physics reconstruction downstream, while still evaluating the network’s discriminative power on realistic, noisy data.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="summary-of-the-dataset-pipeline">
+<h2>Summary of the Dataset Pipeline<a class="headerlink" href="#summary-of-the-dataset-pipeline" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Simulate particle-gun data</strong> for <span class="math notranslate nohighlight">\(\gamma\)</span>, <span class="math notranslate nohighlight">\(\pi^{+}\)</span>, and <span class="math notranslate nohighlight">\(\pi^{-}\)</span> across FCAL acceptance.<br />
+→ Label and preprocess into shower images for CNN training.</p></li>
+<li><p><strong>Train CNN</strong> to classify neutral showers as photons or split-offs.</p></li>
+<li><p><strong>Generate ω → π⁺ π⁻ π⁰ → π⁺ π⁻ γγ events</strong>.<br />
+→ Apply the trained CNN to select photon candidates in realistic multi-shower environments.</p></li>
+<li><p><strong>Evaluate performance</strong> using reconstruction metrics such as:</p>
+<ul class="simple">
+<li><p>Correct photon identification rate per event</p></li>
+<li><p><span class="math notranslate nohighlight">\(\pi^{0}\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span> invariant mass resolution</p></li>
+<li><p>False positive rate (split-offs misidentified as photons)</p></li>
+</ul>
+</li>
+</ol>
+<p>This integrated pipeline connects detector-level physics simulation with a machine learning surrogate, providing both a pedagogical and practical framework for accelerating simulation and reconstruction tasks in nuclear physics.</p>
+</section>
+<section id="a-sample-event">
+<h2>A sample Event<a class="headerlink" href="#a-sample-event" title="Link to this heading">#</a></h2>
+<p>A typical event in FCAL will look like this. One can treat the FCAL readout as an image.</p>
+<figure class="align-default" id="id13">
+<a class="reference internal image-reference" href="../_images/FCALEvent.png"><img alt="Forward Calorimeter event" src="../_images/FCALEvent.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">:caption: This is a typical FCAL Event. Colored blocks show cells registering an energy deposition. Circles indicate showers identified by the reconstruction algorithm, where ther adius of the circle is proportional to the energy of the shower. Different colors represent various candidates (photon, charged or splitoffs). The figure is taken from <span id="id1">[<a class="reference internal" href="#id12" title="R. Barsotti and M.R. Shepherd. Using machine learning to separate hadronic and electromagnetic interactions in the gluex forward calorimeter. Journal of Instrumentation, 15(05):P05021–P05021, May 2020. URL: http://dx.doi.org/10.1088/1748-0221/15/05/P05021, doi:10.1088/1748-0221/15/05/p05021.">BS20</a>]</span></span><a class="headerlink" href="#id13" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id2">
+<div role="list" class="citation-list">
+<div class="citation" id="id12" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">BS20</a><span class="fn-bracket">]</span></span>
+<p>R. Barsotti and M.R. Shepherd. Using machine learning to separate hadronic and electromagnetic interactions in the gluex forward calorimeter. <em>Journal of Instrumentation</em>, 15(05):P05021–P05021, May 2020. URL: <a class="reference external" href="http://dx.doi.org/10.1088/1748-0221/15/05/P05021">http://dx.doi.org/10.1088/1748-0221/15/05/P05021</a>, <a class="reference external" href="https://doi.org/10.1088/1748-0221/15/05/p05021">doi:10.1088/1748-0221/15/05/p05021</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01-intro-to-fcal.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">The Forward Calorimeter (FCAL) in GlueX</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../notebooks/02-dataset-preparation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Preprocessing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-and-dataset-creation">Pipeline and Dataset Creation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-gun-sample">Particle Gun Sample</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#omega-exclusive-sample">Omega Exclusive Sample</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-behavior-consideration">CNN Behavior Consideration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-dataset-pipeline">Summary of the Dataset Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-sample-event">A sample Event</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Karthik Suresh & Cristiano Fanelli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
