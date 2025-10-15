@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -806,6 +806,7 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 <span class="c1"># ---------------------------</span>
 <span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">LR</span> <span class="o">=</span> <span class="mf">3e-4</span>
+<span class="n">DO_TRAIN</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="nd">@torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loader</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Eval&quot;</span><span class="p">,</span> <span class="n">returnShowerE</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">returnthrownE</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
@@ -908,79 +909,79 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">DO_TRAIN</span><span class="p">:</span> <span class="n">model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "894b55ac1f254b9da8f2700ad5b1bf04"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "9acd5a998e254456bdc34cf31e7dc835"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "976f5a7b14fc4993a757e3ed7b2bebec"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 01 | train_loss 0.2729 | val_acc 0.8956 | val_auc 0.9575
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "894b55ac1f254b9da8f2700ad5b1bf04", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9acd5a998e254456bdc34cf31e7dc835", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "976f5a7b14fc4993a757e3ed7b2bebec", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 01 | train_loss 0.2729 | val_acc 0.8956 | val_auc 0.9575
 ✓ New best AUC 0.9575
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "20c6f6d4c0af4b508794f177687bbbda"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "319fba942cf048fc9c55904d85c01679"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 02 | train_loss 0.2575 | val_acc 0.8982 | val_auc 0.9583
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "20c6f6d4c0af4b508794f177687bbbda", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "319fba942cf048fc9c55904d85c01679", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 02 | train_loss 0.2575 | val_acc 0.8982 | val_auc 0.9583
 ✓ New best AUC 0.9583
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "bd0bcf2fe6bd49d786950856cac9700b"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "ca35ee9092b8431a8f8ddf725e4a5e2a"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 03 | train_loss 0.2543 | val_acc 0.9001 | val_auc 0.9595
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bd0bcf2fe6bd49d786950856cac9700b", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "ca35ee9092b8431a8f8ddf725e4a5e2a", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 03 | train_loss 0.2543 | val_acc 0.9001 | val_auc 0.9595
 ✓ New best AUC 0.9595
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "74440999a69e443c8ac58c76a5069b7a"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7c9b33769d644e16b54e503d42b2ffc9"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 04 | train_loss 0.2524 | val_acc 0.9003 | val_auc 0.9599
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "74440999a69e443c8ac58c76a5069b7a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7c9b33769d644e16b54e503d42b2ffc9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 04 | train_loss 0.2524 | val_acc 0.9003 | val_auc 0.9599
 ✓ New best AUC 0.9599
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "1730800bf1104c5590732e4d558e4b75"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "d33bfa85b1ea48c0a4f43fde7e688982"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 05 | train_loss 0.2510 | val_acc 0.8987 | val_auc 0.9598
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1730800bf1104c5590732e4d558e4b75", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d33bfa85b1ea48c0a4f43fde7e688982", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 05 | train_loss 0.2510 | val_acc 0.8987 | val_auc 0.9598
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "be0edcf6ef2e45e6803d2a955fe44093"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "cf717d4a102b483dafdb6af43ee55e78"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 06 | train_loss 0.2502 | val_acc 0.9014 | val_auc 0.9605
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "be0edcf6ef2e45e6803d2a955fe44093", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "cf717d4a102b483dafdb6af43ee55e78", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 06 | train_loss 0.2502 | val_acc 0.9014 | val_auc 0.9605
 ✓ New best AUC 0.9605
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "5a63f4d791f344329626858265d92afd"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e8541dc247d642f792eea16af9eef9e6"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 07 | train_loss 0.2490 | val_acc 0.9011 | val_auc 0.9606
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a63f4d791f344329626858265d92afd", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "e8541dc247d642f792eea16af9eef9e6", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 07 | train_loss 0.2490 | val_acc 0.9011 | val_auc 0.9606
 ✓ New best AUC 0.9606
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "f24027ea0d4a4a03b80278cb0498b802"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "2fe9003b3a3c4157b1febb9ddf3c9b39"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 08 | train_loss 0.2486 | val_acc 0.8986 | val_auc 0.9602
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f24027ea0d4a4a03b80278cb0498b802", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "2fe9003b3a3c4157b1febb9ddf3c9b39", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 08 | train_loss 0.2486 | val_acc 0.8986 | val_auc 0.9602
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "c80c48e3c0bc4ed4bd2902260b1c3319"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "376c2565a7f448f9b42c4224de5a6a46"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 09 | train_loss 0.2479 | val_acc 0.9022 | val_auc 0.9609
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c80c48e3c0bc4ed4bd2902260b1c3319", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "376c2565a7f448f9b42c4224de5a6a46", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 09 | train_loss 0.2479 | val_acc 0.9022 | val_auc 0.9609
 ✓ New best AUC 0.9609
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "28bfa7c41f3a4f0fa3440bcdc7399936"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a22dad176eb146c1beb3bdfb16e963c8"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 10 | train_loss 0.2471 | val_acc 0.9019 | val_auc 0.9608
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "28bfa7c41f3a4f0fa3440bcdc7399936", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a22dad176eb146c1beb3bdfb16e963c8", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 10 | train_loss 0.2471 | val_acc 0.9019 | val_auc 0.9608
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "07c9e2e1b91f48a09fcc8f242a7a7688"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "55a1fa186697411ea67dbbafc9c91fdb"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 11 | train_loss 0.2464 | val_acc 0.9006 | val_auc 0.9612
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "07c9e2e1b91f48a09fcc8f242a7a7688", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "55a1fa186697411ea67dbbafc9c91fdb", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 11 | train_loss 0.2464 | val_acc 0.9006 | val_auc 0.9612
 ✓ New best AUC 0.9612
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "c92f34e7a2e944319c3046d228e53ada"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "adda5e59595844a0a4a1e8396d86a5b1"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 12 | train_loss 0.2461 | val_acc 0.9021 | val_auc 0.9616
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c92f34e7a2e944319c3046d228e53ada", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "adda5e59595844a0a4a1e8396d86a5b1", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 12 | train_loss 0.2461 | val_acc 0.9021 | val_auc 0.9616
 ✓ New best AUC 0.9616
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "86c88a32e42347d886932624b9653cb3"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "9eb87da93f7946149b557be043b79b39"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 13 | train_loss 0.2455 | val_acc 0.9018 | val_auc 0.9615
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "86c88a32e42347d886932624b9653cb3", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9eb87da93f7946149b557be043b79b39", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 13 | train_loss 0.2455 | val_acc 0.9018 | val_auc 0.9615
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "8132c49472204a859fe1540105a9b2ba"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "0352c66c1d6142ef896637890802cf97"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 14 | train_loss 0.2452 | val_acc 0.9015 | val_auc 0.9615
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8132c49472204a859fe1540105a9b2ba", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "0352c66c1d6142ef896637890802cf97", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 14 | train_loss 0.2452 | val_acc 0.9015 | val_auc 0.9615
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e3e0254db8d6408a8e7c147ab8bc7912"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a1542a627ada44889e21e093b61099c9"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 15 | train_loss 0.2449 | val_acc 0.9004 | val_auc 0.9614
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e3e0254db8d6408a8e7c147ab8bc7912", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a1542a627ada44889e21e093b61099c9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 15 | train_loss 0.2449 | val_acc 0.9004 | val_auc 0.9614
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "fc3f358ce90744a1be520e203306fa85"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "97d59b439c284843a9f59199acf11fca"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 16 | train_loss 0.2444 | val_acc 0.9018 | val_auc 0.9619
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "fc3f358ce90744a1be520e203306fa85", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "97d59b439c284843a9f59199acf11fca", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 16 | train_loss 0.2444 | val_acc 0.9018 | val_auc 0.9619
 ✓ New best AUC 0.9619
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "cd9b5f097706401f89e5d3c8e1495241"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "4684fc431dd34584b043c0f2e16a4944"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 17 | train_loss 0.2442 | val_acc 0.9018 | val_auc 0.9616
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cd9b5f097706401f89e5d3c8e1495241", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4684fc431dd34584b043c0f2e16a4944", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 17 | train_loss 0.2442 | val_acc 0.9018 | val_auc 0.9616
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "139eac175c68425eaeece4a6158543e4"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "d49c5a9d169c446bb4fc1daad6efd9c9"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 18 | train_loss 0.2435 | val_acc 0.9028 | val_auc 0.9618
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "139eac175c68425eaeece4a6158543e4", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d49c5a9d169c446bb4fc1daad6efd9c9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 18 | train_loss 0.2435 | val_acc 0.9028 | val_auc 0.9618
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a482c62a7c1b458da2b52ace7f834fbc"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7defdf5eb40a48b1a490e7a5a13abe87"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 19 | train_loss 0.2432 | val_acc 0.9020 | val_auc 0.9617
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a482c62a7c1b458da2b52ace7f834fbc", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7defdf5eb40a48b1a490e7a5a13abe87", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 19 | train_loss 0.2432 | val_acc 0.9020 | val_auc 0.9617
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a993d6235e394fedaa4c4b4e4e64ab2b"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a7f7b68132f5423e87eec10d3fc0152c"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 20 | train_loss 0.2429 | val_acc 0.8991 | val_auc 0.9608
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a993d6235e394fedaa4c4b4e4e64ab2b", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a7f7b68132f5423e87eec10d3fc0152c", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 20 | train_loss 0.2429 | val_acc 0.8991 | val_auc 0.9608
 </pre></div>
 </div>
 </div>
@@ -992,17 +993,18 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 <h3>Test scores<a class="headerlink" href="#test-scores" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">SmallCNN</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">save_path</span> <span class="o">=</span> <span class="s2">&quot;./models&quot;</span>
-<span class="n">model_url</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/FCALClassifier.safetensors&quot;</span>
-<span class="n">model_path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">model_url</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">safetensors</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_open</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">DO_TRAIN</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SmallCNN</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">save_path</span> <span class="o">=</span> <span class="s2">&quot;./models&quot;</span>
+    <span class="n">model_url</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/FCALClassifier.safetensors&quot;</span>
+    <span class="n">model_path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">model_url</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">safetensors</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_open</span>
 
-<span class="n">tensors</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">with</span> <span class="n">safe_open</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">framework</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">tensors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">get_tensor</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+    <span class="n">tensors</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="n">safe_open</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">framework</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">tensors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">get_tensor</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1037,7 +1039,7 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "c1164450644740dca5061446f9ca5127"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test | acc 0.9028 | auc 0.9626
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c1164450644740dca5061446f9ca5127", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Test | acc 0.9028 | auc 0.9626
 </pre></div>
 </div>
 <img alt="../_images/7ca16018a5ad0f87683e2779bf92242475b3ad794c9a517ba3b6887f75667d1d.png" src="../_images/7ca16018a5ad0f87683e2779bf92242475b3ad794c9a517ba3b6887f75667d1d.png" />
@@ -1256,7 +1258,7 @@ At t=0.50: ε_sig=0.9200, R_bkg=0.8879
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "f26a302cc4f24516b45abb42d913a600"}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f26a302cc4f24516b45abb42d913a600", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1300,7 +1302,7 @@ At t=0.50: ε_sig=0.9200, R_bkg=0.8879
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e1bbc98fbc2d406f87be3131a7411daa"}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E_bin                 Acc       AUC   Nevents
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e1bbc98fbc2d406f87be3131a7411daa", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>E_bin                 Acc       AUC   Nevents
 [0.1, 0.5)          0.873     0.863     46603
 [0.5, 1.0)          0.778     0.831     13455
 [1.0, 2.0)          0.903     0.810     19009
@@ -1770,16 +1772,16 @@ Contents of event_000000:
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "envdnp2025"
+            mode: "python"
         },
         kernelOptions: {
-            name: "envdnp2025",
+            name: "python3",
             path: "./notebooks"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'envdnp2025'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
