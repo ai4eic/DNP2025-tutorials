@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -63,7 +63,7 @@
     <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/notebooks/02-dataset-preparation.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Generation" href="02-cnn-classification.html" />
+    <link rel="next" title="CNN for FCAL Shower Classification" href="02-cnn-classification.html" />
     <link rel="prev" title="Problem Formulation" href="../chapters/02-problem-description.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -178,11 +178,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../chapters/02-problem-description.html">Problem Formulation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-cnn-classification.html">Data Generation</a></li>
-
-
-
-
+<li class="toctree-l1"><a class="reference internal" href="02-cnn-classification.html">CNN for FCAL Shower Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02-cnn-regression.html">Data Generation</a></li>
 
 
@@ -1466,37 +1462,89 @@ FCALNeutralShowerE of type std::vector&lt;double&gt;
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">patches</span>
-
-<span class="c1"># Test on first event</span>
-<span class="n">test_event</span> <span class="o">=</span> <span class="n">omega_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">patches</span> <span class="o">=</span> <span class="n">make_event_patches</span><span class="p">(</span>
-    <span class="n">rows</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-    <span class="n">cols</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-    <span class="n">energies</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-    <span class="n">nHitsPerShower</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;nHitsPerShower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-    <span class="n">startIndexPerShower</span><span class="o">=</span><span class="n">test_event</span><span class="p">[</span><span class="s1">&#39;startIndexPerShower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">patches</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># -&gt; (nShowers, 11, 11)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(7, 11, 11)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">LorentzVectorToArray</span><span class="p">(</span><span class="n">lorentzVector</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lorentzVector</span><span class="o">.</span><span class="n">fP</span><span class="o">.</span><span class="n">fX</span><span class="p">,</span> <span class="n">lorentzVector</span><span class="o">.</span><span class="n">fP</span><span class="o">.</span><span class="n">fY</span><span class="p">,</span> <span class="n">lorentzVector</span><span class="o">.</span><span class="n">fP</span><span class="o">.</span><span class="n">fZ</span><span class="p">,</span> <span class="n">lorentzVector</span><span class="o">.</span><span class="n">fE</span><span class="p">])</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">save_omega_patches_to_h5</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;OmegaExclusive_patches.h5&quot;</span><span class="p">,</span> <span class="n">patch_size</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build and save Omega Exclusive event data to HDF5.</span>
+<span class="sd">    Uses the existing dataframe &#39;df&#39; and the make_event_patches() function.</span>
+
+<span class="sd">    Each event will store:</span>
+<span class="sd">      - thrown π⁺ and π⁻ four-vectors</span>
+<span class="sd">      - all FCAL shower 4-vectors (Px, Py, Pz, E)</span>
+<span class="sd">      - corresponding FCAL shower 11x11 patches</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GlueX Omega Exclusive events with FCAL 11x11 patches&quot;</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;patch_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">patch_size</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;n_events&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;lorentzVector_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Px, Py, Pz, E&quot;</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Converting events&quot;</span><span class="p">)):</span>
+            <span class="n">grp</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;event_</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># --- Save π⁺ and π⁻ 4-vectors ---</span>
+            <span class="n">grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;piPlus_p4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">LorentzVectorToArray</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">thrownPiPlus</span><span class="p">))</span>
+            <span class="n">grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;piMinus_p4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">LorentzVectorToArray</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">thrownPiMinus</span><span class="p">))</span>
+
+            <span class="c1"># --- Make per-shower patches ---</span>
+            <span class="n">patches</span> <span class="o">=</span> <span class="n">make_event_patches</span><span class="p">(</span>
+                <span class="n">rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
+                <span class="n">cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
+                <span class="n">energies</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">energies</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
+                <span class="n">nHitsPerShower</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">nHitsPerShower</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
+                <span class="n">startIndexPerShower</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">startIndexPerShower</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()),</span>
+                <span class="n">patch_size</span><span class="o">=</span><span class="n">patch_size</span>
+            <span class="p">)</span>
+
+            <span class="c1"># --- Shower-level 4-vectors (Px, Py, Pz, E) ---</span>
+            <span class="n">shower_p4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPx</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                 <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPy</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                 <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerPz</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                 <span class="n">event</span><span class="o">.</span><span class="n">FCALNeutralShowerE</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()],</span>
+                <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+            <span class="n">grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;shower_p4&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">shower_p4</span><span class="p">)</span>
+            <span class="n">grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s2">&quot;shower_patches&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">patches</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> events to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_omega_formatted</span> <span class="o">=</span> <span class="s2">&quot;CNN4FCAL_OMEGA_PATCHSIZE_11.h5&quot;</span>
+
+<span class="n">save_omega_patches_to_h5</span><span class="p">(</span><span class="n">omega_df</span><span class="p">,</span> <span class="n">output_omega_formatted</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x14a2f55cab40&gt;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Converting events: 100%|██████████| 97525/97525 [04:14&lt;00:00, 383.58it/s]
 </pre></div>
 </div>
-<img alt="../_images/6e57c9b59d7f6bce2e63e3ae9e47ab2b8f99c4458beaa8631aa95a5904a326da.png" src="../_images/6e57c9b59d7f6bce2e63e3ae9e47ab2b8f99c4458beaa8631aa95a5904a326da.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Saved 97525 events to CNN4FCAL_OMEGA_PATCHSIZE_11.h5
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1547,7 +1595,7 @@ FCALNeutralShowerE of type std::vector&lt;double&gt;
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Data Generation</p>
+        <p class="prev-next-title">CNN for FCAL Shower Classification</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
