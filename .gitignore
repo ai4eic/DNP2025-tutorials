@@ -12,6 +12,7 @@ _book
 .gitbook
 _build
 
+*data*
 # eBook build output
 *.epub
 *.mobi

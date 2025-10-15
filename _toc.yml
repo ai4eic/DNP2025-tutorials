@@ -13,10 +13,11 @@ parts:
         title: Introduction to FCAL
   - caption: CNN for FCAL
     chapters:
-      - file: notebooks/02-dataset-preparation
-        title: Dataset Preparation
+      - file: chapters/02-problem-description
+        title: Problem Formulation
       - url: https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link
         title: Lecture -- CNN Overview
+      - file: notebooks/02-dataset-preparation
       - file: notebooks/02-cnn-classification
         title: CNN for FCAL Shower Classification
       - file: notebooks/02-cnn-regression

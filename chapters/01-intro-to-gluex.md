@@ -92,5 +92,4 @@ Flow chart on simulation and reconstruction pipeline used at GlueX.
 
 ```{bibliography}
 :style: unsrt
-:filter: docname in docnames
 ```

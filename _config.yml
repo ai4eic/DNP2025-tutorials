@@ -39,6 +39,7 @@ html:
 sphinx:
   extra_extensions:
     - sphinx.ext.mathjax
+    - sphinxcontrib.mermaid
   config:
     html_theme_options:
       repository_url: https://github.com/ai4eic/DNP2025-tutorials
