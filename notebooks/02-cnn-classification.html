@@ -421,7 +421,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-on-physics-events">Inference on Physics events</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-and-next-steps">Conclusion and Next steps</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps-beyond-the-scope-of-tutorial">Next steps (beyond the scope of tutorial)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excersises-to-try-out">Excersises to try out</a></li>
 </ul>
 </li>
 </ul>
@@ -911,78 +911,6 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">DO_TRAIN</span><span class="p">:</span> 
     <span class="n">model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "894b55ac1f254b9da8f2700ad5b1bf04", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9acd5a998e254456bdc34cf31e7dc835", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "976f5a7b14fc4993a757e3ed7b2bebec", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 01 | train_loss 0.2729 | val_acc 0.8956 | val_auc 0.9575
-✓ New best AUC 0.9575
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "20c6f6d4c0af4b508794f177687bbbda", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "319fba942cf048fc9c55904d85c01679", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 02 | train_loss 0.2575 | val_acc 0.8982 | val_auc 0.9583
-✓ New best AUC 0.9583
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bd0bcf2fe6bd49d786950856cac9700b", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "ca35ee9092b8431a8f8ddf725e4a5e2a", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 03 | train_loss 0.2543 | val_acc 0.9001 | val_auc 0.9595
-✓ New best AUC 0.9595
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "74440999a69e443c8ac58c76a5069b7a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7c9b33769d644e16b54e503d42b2ffc9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 04 | train_loss 0.2524 | val_acc 0.9003 | val_auc 0.9599
-✓ New best AUC 0.9599
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1730800bf1104c5590732e4d558e4b75", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d33bfa85b1ea48c0a4f43fde7e688982", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 05 | train_loss 0.2510 | val_acc 0.8987 | val_auc 0.9598
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "be0edcf6ef2e45e6803d2a955fe44093", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "cf717d4a102b483dafdb6af43ee55e78", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 06 | train_loss 0.2502 | val_acc 0.9014 | val_auc 0.9605
-✓ New best AUC 0.9605
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a63f4d791f344329626858265d92afd", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "e8541dc247d642f792eea16af9eef9e6", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 07 | train_loss 0.2490 | val_acc 0.9011 | val_auc 0.9606
-✓ New best AUC 0.9606
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f24027ea0d4a4a03b80278cb0498b802", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "2fe9003b3a3c4157b1febb9ddf3c9b39", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 08 | train_loss 0.2486 | val_acc 0.8986 | val_auc 0.9602
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c80c48e3c0bc4ed4bd2902260b1c3319", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "376c2565a7f448f9b42c4224de5a6a46", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 09 | train_loss 0.2479 | val_acc 0.9022 | val_auc 0.9609
-✓ New best AUC 0.9609
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "28bfa7c41f3a4f0fa3440bcdc7399936", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a22dad176eb146c1beb3bdfb16e963c8", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 10 | train_loss 0.2471 | val_acc 0.9019 | val_auc 0.9608
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "07c9e2e1b91f48a09fcc8f242a7a7688", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "55a1fa186697411ea67dbbafc9c91fdb", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 11 | train_loss 0.2464 | val_acc 0.9006 | val_auc 0.9612
-✓ New best AUC 0.9612
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c92f34e7a2e944319c3046d228e53ada", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "adda5e59595844a0a4a1e8396d86a5b1", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 12 | train_loss 0.2461 | val_acc 0.9021 | val_auc 0.9616
-✓ New best AUC 0.9616
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "86c88a32e42347d886932624b9653cb3", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "9eb87da93f7946149b557be043b79b39", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 13 | train_loss 0.2455 | val_acc 0.9018 | val_auc 0.9615
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8132c49472204a859fe1540105a9b2ba", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "0352c66c1d6142ef896637890802cf97", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 14 | train_loss 0.2452 | val_acc 0.9015 | val_auc 0.9615
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e3e0254db8d6408a8e7c147ab8bc7912", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a1542a627ada44889e21e093b61099c9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 15 | train_loss 0.2449 | val_acc 0.9004 | val_auc 0.9614
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "fc3f358ce90744a1be520e203306fa85", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "97d59b439c284843a9f59199acf11fca", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 16 | train_loss 0.2444 | val_acc 0.9018 | val_auc 0.9619
-✓ New best AUC 0.9619
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cd9b5f097706401f89e5d3c8e1495241", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4684fc431dd34584b043c0f2e16a4944", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 17 | train_loss 0.2442 | val_acc 0.9018 | val_auc 0.9616
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "139eac175c68425eaeece4a6158543e4", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d49c5a9d169c446bb4fc1daad6efd9c9", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 18 | train_loss 0.2435 | val_acc 0.9028 | val_auc 0.9618
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a482c62a7c1b458da2b52ace7f834fbc", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7defdf5eb40a48b1a490e7a5a13abe87", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 19 | train_loss 0.2432 | val_acc 0.9020 | val_auc 0.9617
-</pre></div>
-</div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a993d6235e394fedaa4c4b4e4e64ab2b", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "a7f7b68132f5423e87eec10d3fc0152c", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 20 | train_loss 0.2429 | val_acc 0.8991 | val_auc 0.9608
 </pre></div>
 </div>
 </div>
@@ -1736,14 +1664,14 @@ Contents of event_000000:
 <blockquote>
 <div><p>The CNN suppresses spurious photon–split-off combinations that broaden the ω peak. Even though it keeps fewer total events, the resulting spectrum is cleaner and closer to the intrinsic resonance shape — a clear indication that learned selection captures physical shower patterns better than rigid geometric cuts.</p>
 </div></blockquote>
-<section id="next-steps-beyond-the-scope-of-tutorial">
-<h3>Next steps (beyond the scope of tutorial)<a class="headerlink" href="#next-steps-beyond-the-scope-of-tutorial" title="Link to this heading">#</a></h3>
+<section id="excersises-to-try-out">
+<h3>Excersises to try out<a class="headerlink" href="#excersises-to-try-out" title="Link to this heading">#</a></h3>
 <p>Here are some concrete directions to extend this work and explore further physics–ML integration:</p>
 <ol class="arabic simple">
 <li><p><strong>Optimize the classifier working point</strong></p>
 <ul class="simple">
 <li><p>Instead of using a hard <code class="docutils literal notranslate"><span class="pre">argmax</span></code>, scan the photon probability threshold.</p></li>
-<li><p>Maximize a physics-driven metric such as ( S / \sqrt{S + B} ) or purity in ω reconstruction.</p></li>
+<li><p>Maximize a physics-driven metric such as <span class="math notranslate nohighlight">\( S / \sqrt{S + B} \)</span> or purity in ω reconstruction.</p></li>
 <li><p>Compare how the yield–purity tradeoff affects the reconstructed mass width.</p></li>
 </ul>
 </li>
@@ -1849,7 +1777,7 @@ Contents of event_000000:
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-on-physics-events">Inference on Physics events</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-and-next-steps">Conclusion and Next steps</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps-beyond-the-scope-of-tutorial">Next steps (beyond the scope of tutorial)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excersises-to-try-out">Excersises to try out</a></li>
 </ul>
 </li>
 </ul>
