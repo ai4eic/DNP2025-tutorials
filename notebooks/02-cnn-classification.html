@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -63,7 +63,7 @@
     <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/notebooks/02-cnn-classification.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Generation" href="02-cnn-regression.html" />
+    <link rel="next" title="CNN for FCAL Shower Regression" href="02-cnn-regression.html" />
     <link rel="prev" title="Data Preprocessing" href="02-dataset-preparation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -179,11 +179,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02-dataset-preparation.html">Data Preprocessing</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">CNN for FCAL Shower Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-cnn-regression.html">Data Generation</a></li>
-
-
-
-
+<li class="toctree-l1"><a class="reference internal" href="02-cnn-regression.html">CNN for FCAL Shower Regression</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="nav bd-sidenav">
@@ -445,7 +441,12 @@ document.write(`
 <h2>Prepare Dataset<a class="headerlink" href="#prepare-dataset" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py torch torchvision tqdm safetensors &gt; /dev/null
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py scikit-learn torch torchvision tqdm safetensors &gt; /dev/null
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
 </pre></div>
 </div>
 </div>
@@ -558,7 +559,6 @@ document.write(`
 <p>This dataset will:</p>
 <ul class="simple">
 <li><p>Read directly from the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> file</p></li>
-<li><p>Load entries on demand (not all into memory)</p></li>
 <li><p>Optionally we can apply normalization in the form of transformation</p></li>
 </ul>
 <div class="cell docutils container">
@@ -598,7 +598,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="c1"># Handle subset indices</span>
@@ -909,7 +909,8 @@ thrownE: tensor([1.6663, 1.1155, 1.1404, 0.9574, 1.5913, 1.4105, 1.1804, 1.8689]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">DO_TRAIN</span><span class="p">:</span> <span class="n">model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">DO_TRAIN</span><span class="p">:</span> 
+    <span class="n">model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1807,7 +1808,7 @@ Contents of event_000000:
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Data Generation</p>
+        <p class="prev-next-title">CNN for FCAL Shower Regression</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
