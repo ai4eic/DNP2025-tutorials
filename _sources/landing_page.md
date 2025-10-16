@@ -6,7 +6,7 @@ Welcome to the DNP 2025 Deep Learning Tutorials! This Jupyter Book provides comp
 
 ## Overview
 
-These tutorials are designed for physicists and researchers working on the GlueX experiment at Jefferson Lab. We focus on two main applications of deep learning:
+These tutorials are designed for Nuclear and Paricle Physics and Researchers. We focus on two main applications of deep learning:
 
 1. **CNN-based Classification**: Using Convolutional Neural Networks to classify FCAL showers and distinguish between photons and splitoffs
 2. **Generative AI**: Building generative models to simulate FCAL photon showers based on their kinematics.
@@ -47,7 +47,13 @@ For questions or feedback, please open an issue on our [GitHub repository](https
 
 ---
 
-*This tutorial is part of the AI4EIC collaboration's effort to bring modern machine learning techniques to experimental nuclear physics.*
+
+```{admonition} Authors Acknowledgements to GlueX
+:class: dropdrown
+* This tutorial is part of the AI4EIC collaboration’s effort to bring modern machine learning techniques to experimental nuclear physics.
+
+* We gratefully acknowledge the [GlueX Collaboration](https://gluex.org/) for the software framework and the public release of the Monte Carlo simulation data used in this work [GlueX acknowledgements](https://gluex.org/thanks.html).
+```
 
 ```{tableofcontents}
 ```
