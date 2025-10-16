@@ -7,6 +7,12 @@
 ## https://docs.npmjs.com/misc/faq#should-i-check-my-node_modules-folder-into-git
 node_modules
 
+*models*
+*.err
+*.out
+*.csh
+*run*.py
+
 # Book build output
 _book
 .gitbook

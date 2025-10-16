@@ -128,5 +128,6 @@ width: 80%
 ## References
 
 ```{bibliography}
+:style: unsrt
 :filter: docname in docnames
 ```

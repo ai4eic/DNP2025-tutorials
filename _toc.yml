@@ -25,6 +25,8 @@ parts:
   
   - caption: Generative AI for FCAL
     chapters:
+      - file: chapters/03-problem-description
+        title: Problem Formulation
       - file: notebooks/03-gan-generation
   
   - caption: Appendix
