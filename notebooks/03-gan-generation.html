@@ -404,6 +404,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#drawbacks-of-gan-based-approaches">Drawbacks of GAN-based Approaches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#try-next">Try Next</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives-and-future-directions">Alternatives and Future Directions</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -420,6 +427,11 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py scikit-learn torch torchvision tqdm safetensors autograd &gt; /dev/null
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
 </pre></div>
 </div>
 </div>
@@ -537,7 +549,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span> <span class="c1"># Import numpy</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FCALPatchPhotonDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_path</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thrownNormalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_path</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thrownNormalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minthrownE</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">maxthrownE</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -553,8 +565,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h5_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minthrowE</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxthrowE</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># GeV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minthrownE</span> <span class="o">=</span> <span class="n">minthrownE</span>  <span class="c1"># GeV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxthrownE</span> <span class="o">=</span> <span class="n">maxthrownE</span>  <span class="c1"># GeV</span>
 
         <span class="c1"># Assign datasets directly from the file handle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
@@ -568,8 +580,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># lets select only photons</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">photon_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># lets select only photons and select photons only with showerE &gt;= 1  &lt;= 2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">photon_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minthrownE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxthrownE</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">photon_indices</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">photon_indices</span><span class="p">]</span>
@@ -578,8 +590,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">photon_indices</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">thrownNormalize</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minthrowE</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxthrowE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minthrowE</span> <span class="p">)</span>  <span class="c1"># Normalize by 100 GeV</span>
-        
+            <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">thrownE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minthrownE</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxthrownE</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minthrownE</span> <span class="p">)</span>  <span class="c1"># Normalize </span>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
@@ -626,10 +638,12 @@ document.write(`
     <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">W</span> <span class="o">/</span> <span class="n">e0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">Z</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">emax</span> <span class="o">/</span> <span class="n">e0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">Z</span><span class="p">)</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">Z</span> <span class="o">-</span> <span class="mf">1.0</span>  <span class="c1"># now in [-1,1]</span>
     <span class="k">return</span> <span class="n">Z</span>  <span class="c1"># float32</span>
-
 <span class="k">def</span><span class="w"> </span><span class="nf">inv_log_global_norm</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">e0</span><span class="o">=</span><span class="n">ENERGY_SCALE</span><span class="p">,</span> <span class="n">emax</span><span class="o">=</span><span class="n">CLIP_MAX</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">e0</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">Z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">emax</span> <span class="o">/</span> <span class="n">e0</span><span class="p">)))</span>
+    <span class="c1"># Z in [-1, 1]  -&gt;  W in GeV</span>
+    <span class="n">Z01</span> <span class="o">=</span> <span class="p">(</span><span class="n">Z</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="k">return</span> <span class="n">e0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">Z01</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">emax</span> <span class="o">/</span> <span class="n">e0</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">normalize_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">):</span>
@@ -637,10 +651,22 @@ document.write(`
     <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">patch</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">patch</span>
 
-<span class="n">train_ds</span> <span class="o">=</span> <span class="n">FCALPatchPhotonDataset</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">log_global_norm</span><span class="p">)</span>
+<span class="n">train_ds</span> <span class="o">=</span> <span class="n">FCALPatchPhotonDataset</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">log_global_norm</span><span class="p">,</span> <span class="n">minthrownE</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maxthrownE</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
                           <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">train_ds</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(113758, 223)
 </pre></div>
 </div>
 </div>
@@ -660,8 +686,8 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Batch shape: torch.Size([512, 1, 11, 11])
 Labels: tensor([1, 1, 1, 1, 1, 1, 1, 1])
-showerE: tensor([0.3045, 3.1794, 2.0084, 3.4232, 0.6941, 0.9482, 2.5017, 2.0806])
-thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831])
+showerE: tensor([1.5929, 1.3406, 2.0102, 1.0756, 1.2097, 0.8842, 1.0946, 1.7347])
+thrownE: tensor([0.6089, 0.3884, 0.9638, 0.1773, 0.2125, 0.0789, 0.0416, 0.6424])
 </pre></div>
 </div>
 </div>
@@ -944,7 +970,7 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/844d72210a808f97bb1cf872f2cbc8709afcc110b0539082838456416e78a2c2.png" src="../_images/844d72210a808f97bb1cf872f2cbc8709afcc110b0539082838456416e78a2c2.png" />
+<img alt="../_images/49c50acfe5814ef804ea3668a8257707b6437b25cf77ed0418c31b19bd6cd842.png" src="../_images/49c50acfe5814ef804ea3668a8257707b6437b25cf77ed0418c31b19bd6cd842.png" />
 </div>
 </div>
 </section>
@@ -985,6 +1011,61 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
     <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">thrownE</span><span class="p">),</span> <span class="n">size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">thrownE</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
 
+<span class="c1"># ---------- FiLM layer ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FiLM2d</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">cond_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_gamma</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">cond_dim</span><span class="p">,</span> <span class="n">channels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_beta</span>  <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">cond_dim</span><span class="p">,</span> <span class="n">channels</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>  <span class="c1"># x: (B,C,H,W), cond: (B,cond_dim)</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_gamma</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">beta</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_beta</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">+</span> <span class="n">beta</span>
+
+<span class="c1"># ---------- Generator (upsample+conv; no checkerboard) ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Gen</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zdim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">cdim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">patch</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch</span> <span class="o">=</span> <span class="n">patch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">zdim</span><span class="o">+</span><span class="n">cdim</span><span class="p">,</span> <span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># (B, base*2, 2, 2)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">base</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f1</span> <span class="o">=</span> <span class="n">FiLM2d</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">cdim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">base</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">base</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f2</span> <span class="o">=</span> <span class="n">FiLM2d</span><span class="p">(</span><span class="n">base</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">cdim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_img</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">base</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">z</span><span class="p">,</span> <span class="n">e</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>        <span class="c1"># base*2=128 if base=64</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># 4x4</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># 8x8</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># 11x11</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_img</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>            <span class="c1"># [-1,1]</span>
+        <span class="k">return</span> <span class="n">x</span>
+<span class="c1"># ---------- Projection Discriminator ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Disc</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cdim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">patch</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">sn</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">spectral_norm</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># SN helps stability</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">sn</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span>   <span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>  <span class="c1"># -&gt; 6x6</span>
+            <span class="n">sn</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="c1"># -&gt; 3x3</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readout</span> <span class="o">=</span> <span class="n">sn</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span>     <span class="o">=</span> <span class="n">sn</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed</span>   <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">cdim</span><span class="p">,</span> <span class="n">base</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># continuous cond embedding</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readout</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>                 <span class="c1"># features (B, F)</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span> <span class="n">proj</span>          <span class="c1"># scalar per sample</span>
+        <span class="k">return</span> <span class="n">score</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Generator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latent_dim</span><span class="o">=</span><span class="n">LATENT_DIM</span><span class="p">,</span> <span class="n">cond_dim</span><span class="o">=</span><span class="n">COND_DIM</span><span class="p">,</span> <span class="n">patch</span><span class="o">=</span><span class="mi">11</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -1008,8 +1089,8 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
             <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">C</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">C</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">C</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
 
-            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">C</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="c1"># WGAN-GP: no Sigmoid here</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">C</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>  <span class="c1"># output in [-1,1]</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
@@ -1046,9 +1127,18 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">cond</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-
-<span class="c1"># ---------------------------</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: cpu, AMP: False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---------------------------</span>
 <span class="c1"># Gradient Penalty</span>
 <span class="c1"># ---------------------------</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_gradient_penalty</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">real_samples</span><span class="p">,</span> <span class="n">fake_samples</span><span class="p">,</span> <span class="n">cond</span><span class="p">):</span>
@@ -1077,11 +1167,37 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
     <span class="n">gradients</span> <span class="o">=</span> <span class="n">gradients</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">gradients</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">gp</span> <span class="o">=</span> <span class="p">((</span><span class="n">gradients</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">gp</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: cpu, AMP: False
+
+<span class="k">def</span><span class="w"> </span><span class="nf">occupancy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">thr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">e0</span> <span class="o">=</span> <span class="n">ENERGY_SCALE</span><span class="p">,</span> <span class="n">emax</span> <span class="o">=</span> <span class="n">CLIP_MAX</span><span class="p">):</span>            <span class="c1"># x in [-1,1]</span>
+    <span class="n">Z01</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>                    <span class="c1"># -&gt; [0,1]</span>
+    <span class="n">e0_t</span>   <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">e0</span><span class="p">,</span>   <span class="n">dtype</span><span class="o">=</span><span class="n">Z01</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">Z01</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">emax_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">emax</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">Z01</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">Z01</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">x01</span> <span class="o">=</span> <span class="n">e0_t</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">Z01</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">emax_t</span> <span class="o">/</span> <span class="n">e0_t</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x01</span> <span class="o">&gt;=</span> <span class="n">thr</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># (B,1,H,W) -&gt; (B,)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">e1e9</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x01</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">x01</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="n">x01</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">flat</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">//</span> <span class="n">W</span><span class="p">,</span> <span class="n">idx</span> <span class="o">%</span> <span class="n">W</span>
+    <span class="n">E1</span> <span class="o">=</span> <span class="n">flat</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">E9</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+        <span class="n">r0</span><span class="p">,</span> <span class="n">c0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">r0</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">r0</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">c0</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">W</span><span class="p">,</span><span class="n">c0</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">E9</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x01</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">r1</span><span class="p">:</span><span class="n">r2</span><span class="p">,</span><span class="n">c1</span><span class="p">:</span><span class="n">c2</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">E1</span> <span class="o">/</span> <span class="p">(</span><span class="n">E9</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">physics_guidance_loss</span><span class="p">(</span><span class="n">x_fake</span><span class="p">,</span> <span class="n">x_real</span><span class="p">):</span>
+    <span class="c1"># match batch means (use small weights)</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">L</span> <span class="o">+=</span> <span class="p">(</span><span class="n">occupancy</span><span class="p">(</span><span class="n">x_fake</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">occupancy</span><span class="p">(</span><span class="n">x_real</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>     <span class="c1"># occupancy match</span>
+    <span class="n">L</span> <span class="o">+=</span> <span class="p">(</span><span class="n">e1e9</span><span class="p">(</span><span class="n">x_fake</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">e1e9</span><span class="p">(</span><span class="n">x_real</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>               <span class="c1"># E1/E9 match</span>
+    <span class="c1"># mild sparsity to fight “blobs”</span>
+    <span class="n">L</span> <span class="o">+=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">x_fake</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">L</span>
 </pre></div>
 </div>
 </div>
@@ -1164,7 +1280,8 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
                     <span class="n">real_validity</span> <span class="o">=</span> <span class="n">D</span><span class="p">(</span><span class="n">real_imgs</span><span class="p">,</span> <span class="n">condE</span><span class="p">)</span>
                     <span class="n">fake_validity</span> <span class="o">=</span> <span class="n">D</span><span class="p">(</span><span class="n">gen_imgs</span><span class="p">,</span> <span class="n">condE</span><span class="p">)</span>
                 <span class="n">gp</span> <span class="o">=</span> <span class="n">compute_gradient_penalty</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">real_imgs</span><span class="p">,</span> <span class="n">gen_imgs</span><span class="p">,</span> <span class="n">condE</span><span class="p">)</span>
-                <span class="n">d_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">real_validity</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fake_validity</span><span class="p">)</span> <span class="o">+</span> <span class="n">LAMBDA_GP</span> <span class="o">*</span> <span class="n">gp</span>
+                <span class="n">EPS_DRIFT</span> <span class="o">=</span> <span class="mf">1e-3</span>
+                <span class="n">d_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">real_validity</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fake_validity</span><span class="p">)</span> <span class="o">+</span> <span class="n">LAMBDA_GP</span> <span class="o">*</span> <span class="n">gp</span> <span class="o">+</span> <span class="n">EPS_DRIFT</span> <span class="o">*</span> <span class="p">(</span><span class="n">real_validity</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
                 <span class="n">opt_D</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">USE_AMP</span><span class="p">:</span>
                     <span class="n">scalerD</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">d_loss</span><span class="p">)</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
@@ -1181,6 +1298,8 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
             <span class="k">with</span> <span class="n">ctx</span><span class="p">:</span>
                 <span class="n">gen_imgs</span> <span class="o">=</span> <span class="n">G</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">condE</span><span class="p">)</span>
                 <span class="n">g_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">D</span><span class="p">(</span><span class="n">gen_imgs</span><span class="p">,</span> <span class="n">condE</span><span class="p">))</span>
+            <span class="n">phy</span> <span class="o">=</span> <span class="n">physics_guidance_loss</span><span class="p">(</span><span class="n">gen_imgs</span><span class="p">,</span> <span class="n">real_imgs</span><span class="p">)</span>
+            <span class="n">g_loss</span> <span class="o">+=</span> <span class="n">phy</span>
             <span class="n">opt_G</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">USE_AMP</span><span class="p">:</span>
                 <span class="n">scalerG</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">g_loss</span><span class="p">)</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
@@ -1221,8 +1340,10 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---------------------------</span>
 <span class="c1"># Initialize</span>
 <span class="c1"># ---------------------------</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">Generator</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
-<span class="n">D</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="c1">#G = Generator().to(DEVICE)</span>
+<span class="c1">#D = Discriminator().to(DEVICE)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">Gen</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">Disc</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
 <span class="n">opt_G</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">2e-4</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="n">BETA1</span><span class="p">,</span> <span class="n">BETA2</span><span class="p">))</span>
 <span class="n">opt_D</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="n">BETA1</span><span class="p">,</span> <span class="n">BETA2</span><span class="p">))</span>
 
@@ -1243,15 +1364,153 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
 <span class="c1"># Training Loop</span>
 <span class="c1"># ---------------------------</span>
 
-<span class="n">G</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">train_wGAN_gp</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">opt_G</span><span class="p">,</span> <span class="n">opt_D</span><span class="p">,</span> 
-                <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./models&quot;</span><span class="p">,</span> 
-                <span class="n">gen_batch_interval</span><span class="o">=</span><span class="n">num_batches</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> 
-                <span class="n">cond_vector</span><span class="o">=</span><span class="n">thrownE_values</span><span class="p">,</span> <span class="n">rand_vector</span><span class="o">=</span><span class="n">rand_vector</span><span class="p">,</span> <span class="n">true_patch_metrics</span><span class="o">=</span><span class="n">true_metrics</span>
-                <span class="p">)</span>
+<span class="n">DO_TRAIN</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">DO_TRAIN</span><span class="p">:</span>
+    <span class="n">G</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">train_wGAN_gp</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">opt_G</span><span class="p">,</span> <span class="n">opt_D</span><span class="p">,</span> 
+                    <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./models&quot;</span><span class="p">,</span> 
+                    <span class="n">gen_batch_interval</span><span class="o">=</span><span class="n">num_batches</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> 
+                    <span class="n">cond_vector</span><span class="o">=</span><span class="n">thrownE_values</span><span class="p">,</span> <span class="n">rand_vector</span><span class="o">=</span><span class="n">rand_vector</span><span class="p">,</span> <span class="n">true_patch_metrics</span><span class="o">=</span><span class="n">true_metrics</span>
+                    <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">thrownE_values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([1028., 1004.,  974., 1007., 1059.,  963.,  986.,  987.,  991.,
+        1001.]),
+ array([3.93390656e-06, 1.00002289e-01, 2.00000644e-01, 2.99998999e-01,
+        3.99997354e-01, 4.99995708e-01, 5.99994063e-01, 6.99992418e-01,
+        7.99990773e-01, 8.99989128e-01, 9.99987483e-01]),
+ &lt;BarContainer object of 10 artists&gt;)
+</pre></div>
+</div>
+<img alt="../_images/5c0850784e3a9236008f7ed5366371958f920feadf665eea9f7f559666f2f093.png" src="../_images/5c0850784e3a9236008f7ed5366371958f920feadf665eea9f7f559666f2f093.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">DO_TRAIN</span><span class="p">:</span>
+    <span class="c1"># load the model from safetensors</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">safetensors.torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_file</span>
+    <span class="n">model_url</span> <span class="o">=</span> <span class="s2">&quot;https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-1-2GeV.safetensors&quot;</span>
+    <span class="n">model_path</span> <span class="o">=</span> <span class="n">download</span><span class="p">(</span><span class="n">model_url</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading model from </span><span class="si">{</span><span class="n">model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">safetensors</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_open</span>
+
+    <span class="n">tensors</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="n">safe_open</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">framework</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">tensors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">get_tensor</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">tensors</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ File already exists: data/generatorGAN-FCAL-1-2GeV.safetensors
+Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="inference">
+<h2>Inference<a class="headerlink" href="#inference" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_gen_samples</span> <span class="o">=</span> <span class="mi">10_000</span>
+<span class="n">thrownE_vector</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">num_gen_samples</span><span class="p">)</span>
+<span class="n">all_generated</span><span class="p">,</span> <span class="n">all_thrownE</span> <span class="o">=</span> <span class="n">run_inference</span><span class="p">(</span><span class="n">num_gen_samples</span><span class="p">,</span> <span class="n">thrownE_vector</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">inverse_transform</span><span class="o">=</span><span class="n">inv_log_global_norm</span><span class="p">)</span>
+<span class="n">gen_metrics</span> <span class="o">=</span> <span class="n">compute_patch_metrics</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_generated</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_thrownE</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare_plot</span><span class="p">(</span><span class="n">gen_metrics</span><span class="p">,</span> <span class="n">true_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/de2f19adce5495137265dadeefe785eba8892c6661398fa44aab8136e52471cb.png" src="../_images/de2f19adce5495137265dadeefe785eba8892c6661398fa44aab8136e52471cb.png" />
+</div>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>In this exercise, we successfully demonstrated a <strong>conditional Wasserstein GAN with gradient penalty (wGAN-GP)</strong> to build a <strong>Fast Simulator</strong> for calorimeter showers in the <strong>GlueX Forward Calorimeter (FCAL)</strong>. The model was conditioned on the thrown photon energy and trained to generate realistic hit energy maps that reproduce various physics-driven distributions.</p>
+<p>The comparison plots show that the generated showers reproduce key observables such as:</p>
+<ul class="simple">
+<li><p>Total and maximum cell energy per patch</p></li>
+<li><p>Energy ratios (E1/E9, E9/E25)</p></li>
+<li><p>Energy-weighted centroids (row and column)</p></li>
+<li><p>Hit multiplicities and cell-level energy distributions</p></li>
+</ul>
+<p>This demonstrates that deep generative models can serve as <strong>learned surrogates</strong> to replace or accelerate full detector simulations — an idea increasingly adopted in <strong>nuclear and particle physics</strong> (notably, the <em>CaloGAN</em> developed for calorimeter simulations at the LHC).</p>
+<hr class="docutils" />
+<section id="drawbacks-of-gan-based-approaches">
+<h3>Drawbacks of GAN-based Approaches<a class="headerlink" href="#drawbacks-of-gan-based-approaches" title="Link to this heading">#</a></h3>
+<p>While GANs offer fast and high-fidelity simulation capabilities, they also come with well-known challenges:</p>
+<ol class="arabic simple">
+<li><p><strong>Training Instability:</strong><br />
+GAN training is a minimax optimization problem and can suffer from non-convergence or mode collapse.</p></li>
+<li><p><strong>Mode Collapse:</strong><br />
+The generator may produce limited diversity, missing some shower morphologies or rare features.</p></li>
+<li><p><strong>Difficulty in Quantitative Evaluation:</strong><br />
+Metrics like Inception Score or FID are not always physically meaningful in detector simulation contexts.</p></li>
+<li><p><strong>Hyperparameter Sensitivity:</strong><br />
+Performance can vary greatly depending on architecture, batch size, learning rate, and regularization strength.</p></li>
+<li><p><strong>Physics Constraints Not Explicitly Enforced:</strong><br />
+The model learns correlations implicitly; enforcing physics priors or conservation laws requires special architectures or loss functions.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="try-next">
+<h3>Try Next<a class="headerlink" href="#try-next" title="Link to this heading">#</a></h3>
+<p>Here are a few directions to extend this work:</p>
+<ol class="arabic simple">
+<li><p><strong>Expand Kinematic Range:</strong><br />
+Train over the full photon energy range (e.g., 0.1–8 GeV) and check model stability and fidelity at high and low ends.</p></li>
+<li><p><strong>Condition on More Features:</strong><br />
+Include the photon’s <strong>polar (θ)</strong> and <strong>azimuthal (φ)</strong> angles as conditioning inputs to model spatial dependence in shower development.</p></li>
+<li><p><strong>Tune Model Hyperparameters:</strong><br />
+Experiment with:</p>
+<ul class="simple">
+<li><p>Number of convolutional layers and filters</p></li>
+<li><p>Learning rate and optimizer</p></li>
+<li><p>Gradient penalty coefficient (λ)</p></li>
+<li><p>Batch size and normalization schemes</p></li>
+</ul>
+</li>
+<li><p><strong>Evaluate Physics Fidelity:</strong><br />
+Compare reconstructed quantities (like π⁰ or ω invariant masses) using generated vs. simulated showers.</p></li>
+<li><p><strong>Deploy as a Fast Simulation Module:</strong><br />
+Integrate the trained generator into a GlueX simulation pipeline as a drop-in surrogate for Geant4-level calorimeter simulation.</p></li>
+</ol>
+<hr class="docutils" />
+<p>By completing this exercise, you’ve seen how <strong>generative AI</strong> can be used to <strong>accelerate detector simulations</strong> while retaining physics fidelity — a powerful tool for next-generation analyses in <strong>nuclear and particle physics</strong>.</p>
+</section>
+<section id="alternatives-and-future-directions">
+<h3>Alternatives and Future Directions<a class="headerlink" href="#alternatives-and-future-directions" title="Link to this heading">#</a></h3>
+<p>Several alternative generative approaches address these limitations and are worth exploring:</p>
+<ul class="simple">
+<li><p><strong>Variational Autoencoders (VAEs):</strong><br />
+Offer stable training and explicit latent-space structure, though sometimes at the cost of sample sharpness.</p></li>
+<li><p><strong>Normalizing Flows:</strong><br />
+Provide exact likelihoods and allow density estimation, useful for physically interpretable generation.</p></li>
+<li><p><strong>Diffusion Models:</strong><br />
+Recently shown to outperform GANs in both fidelity and stability, with the potential to model fine shower details.</p></li>
+<li><p><strong>Physics-Informed Generative Models:</strong><br />
+Incorporate known detector response or conservation laws directly into the architecture or loss function.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
 </section>
 </section>
 
@@ -1324,6 +1583,13 @@ thrownE: tensor([0.3510, 3.2682, 1.9446, 3.1843, 0.7859, 1.0541, 2.7125, 1.9831]
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#drawbacks-of-gan-based-approaches">Drawbacks of GAN-based Approaches</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#try-next">Try Next</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives-and-future-directions">Alternatives and Future Directions</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
