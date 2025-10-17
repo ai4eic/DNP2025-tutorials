@@ -1630,6 +1630,15 @@ The model learns correlations implicitly; enforcing physics priors or conservati
 <ol class="arabic simple">
 <li><p><strong>Expand Kinematic Range:</strong><br />
 Train over the full photon energy range (e.g., 0.1–4 GeV) and check model stability and fidelity at high and low ends. A trained model for this purpose is available at <a class="reference external" href="https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-100MeV-4GeV.safetensors"><code class="docutils literal notranslate"><span class="pre">generatorGAN-FCAL-100MeV-4GeV.safetensors</span></code> <img alt="Hugging Face Dataset" src="https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface" /></a></p></li>
+</ol>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/FullKinematicResult.png"><img alt="Full range training GAN" src="../_images/FullKinematicResult.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">:caption: Performance of GAN trained on the full photon energy range <span class="math notranslate nohighlight">\([0.1 - 4.0]\)</span> [GeV] with a minimum hit energy threshold of <span class="math notranslate nohighlight">\(0.01\)</span> [GeV].</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
 <li><p><strong>Condition on More Features:</strong><br />
 Include the photon’s polar <span class="math notranslate nohighlight">\((\theta)\)</span> and azimuthal <span class="math notranslate nohighlight">\((\phi)\)</span> angles as conditioning inputs to model spatial dependence in shower development.</p></li>
 </ol>
