@@ -2,8 +2,6 @@
 
 Welcome to the DNP 2025 Deep Learning Tutorials! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.
 
-**View the book online:** [https://ai4eic.github.io/DNP2025-tutorials/](https://ai4eic.github.io/DNP2025-tutorials/)
-
 ## Overview
 
 These tutorials are designed for Nuclear and Paricle Physics and Researchers. We focus on two main applications of deep learning:
@@ -36,6 +34,14 @@ These tutorials are intended for:
 - Python programming experience
 - Familiarity with NumPy and basic data analysis
 - (Optional) Prior exposure to machine learning concepts
+
+## Dataset and models
+
+Dataset used in this tutorial: [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface)](https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial)
+
+The trained models are archived for easy access and reproducibility.
+You can explore and download them at: [![Hugging Face Model](https://img.shields.io/badge/HuggingFace-Model-orange.svg?logo=huggingface)](https://huggingface.co/AI4EIC/DNP2025-tutorial)
+
 
 ## Event Information
 

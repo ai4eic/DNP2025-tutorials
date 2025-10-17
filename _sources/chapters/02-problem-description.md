@@ -12,7 +12,11 @@ By convention, **showers that are not matched to a reconstructed track** are cla
 - **True photon showers**, originating from neutral particles in the event (e.g., from π⁰ → γγ decays).
 - **Split-off showers**, arising from secondary hadronic interactions.
 
----
+### Foundational Work and Context
+
+The foundational work relevant to this tutorial was laid by the work of **Rebecca Barsotti and Matt Shepherd**, whose analysis and methodology in identifying and classifying FCAL showers provided a systematic framework for distinguishing true photon showers from hadronic split-offs in GlueX data {cite}`Barsotti-2020`.  
+
+Their study established the critical role of shower-shape variables, spatial correlations, and topological information in separating these categories. The insights gained from that work form the **conceptual and methodological basis** for this tutorial
 
 ## Problem Definition
 
