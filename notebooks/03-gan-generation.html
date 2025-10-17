@@ -182,6 +182,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/03-problem-description.html">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1PeEkzcUs_TDk2jAr2fCmnIxO0KrmyxYdlNIexPCGqiw/edit?usp=sharing">Lecture -- GAN Overview</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Conditional GAN for generation</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
@@ -399,12 +400,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-fidelity">Measuring Fidelity</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#drawbacks-of-gan-based-approaches">Drawbacks of GAN-based Approaches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#try-next">Try Next</a></li>
@@ -424,9 +431,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="conditional-gan-for-generation">
 <h1>Conditional GAN for generation<a class="headerlink" href="#conditional-gan-for-generation" title="Link to this heading">#</a></h1>
+<section id="data-preprocessing">
+<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py scikit-learn torch torchvision tqdm safetensors autograd &gt; /dev/null
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py scikit-learn torch torchvision tqdm safetensors autograd torchmetrics &gt; /dev/null
 </pre></div>
 </div>
 </div>
@@ -514,7 +523,7 @@ document.write(`
 </div>
 <p>We are using the same <code class="docutils literal notranslate"><span class="pre">.h5</span></code> dataset for regression. when we process it, We will be simply selecting out photons only to perform our training</p>
 <section id="step-1-open-and-inspect-the-h5-file">
-<h2>Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File<a class="headerlink" href="#step-1-open-and-inspect-the-h5-file" title="Link to this heading">#</a></h2>
+<h3>Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File<a class="headerlink" href="#step-1-open-and-inspect-the-h5-file" title="Link to this heading">#</a></h3>
 <p>We can open the dataset and confirm whats inside it</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -536,7 +545,7 @@ document.write(`
 </div>
 </section>
 <section id="step-2-create-a-custom-pytorch-dataset">
-<h2>Step 2: Create a Custom PyTorch Dataset<a class="headerlink" href="#step-2-create-a-custom-pytorch-dataset" title="Link to this heading">#</a></h2>
+<h3>Step 2: Create a Custom PyTorch Dataset<a class="headerlink" href="#step-2-create-a-custom-pytorch-dataset" title="Link to this heading">#</a></h3>
 <p>This dataset will:</p>
 <ul class="simple">
 <li><p>Read directly from the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> file</p></li>
@@ -618,11 +627,13 @@ document.write(`
 </div>
 </section>
 <section id="step-3-create-dataset-and-dataloader-objects">
-<h2>Step 3: Create Dataset and DataLoader Objects<a class="headerlink" href="#step-3-create-dataset-and-dataloader-objects" title="Link to this heading">#</a></h2>
+<h3>Step 3: Create Dataset and DataLoader Objects<a class="headerlink" href="#step-3-create-dataset-and-dataloader-objects" title="Link to this heading">#</a></h3>
 <p>The entire dataset will be used for training here. Let us normalize each of the images with the total energy of all the hits in the shower</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ENERGY_SCALE</span>  <span class="o">=</span> <span class="mf">0.05</span>    <span class="c1"># GeV (for global log scaling)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MIN_THROWN_E</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># GeV</span>
+<span class="n">MAX_THROWN_E</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># GeV</span>
+<span class="n">ENERGY_SCALE</span>  <span class="o">=</span> <span class="mf">0.05</span>    <span class="c1"># GeV (for global log scaling)</span>
 <span class="n">CLIP_MAX</span>      <span class="o">=</span> <span class="mf">2.0</span>     <span class="c1"># GeV per cell clamp for scaling</span>
 <span class="n">DEVICE</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="n">USE_AMP</span>       <span class="o">=</span> <span class="p">(</span><span class="n">DEVICE</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">)</span>   <span class="c1"># automatic mixed precision only on CUDA</span>
@@ -640,6 +651,7 @@ document.write(`
     <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">Z</span><span class="p">)</span>
     <span class="n">Z</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">Z</span> <span class="o">-</span> <span class="mf">1.0</span>  <span class="c1"># now in [-1,1]</span>
     <span class="k">return</span> <span class="n">Z</span>  <span class="c1"># float32</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">inv_log_global_norm</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">e0</span><span class="o">=</span><span class="n">ENERGY_SCALE</span><span class="p">,</span> <span class="n">emax</span><span class="o">=</span><span class="n">CLIP_MAX</span><span class="p">):</span>
     <span class="c1"># Z in [-1, 1]  -&gt;  W in GeV</span>
     <span class="n">Z01</span> <span class="o">=</span> <span class="p">(</span><span class="n">Z</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
@@ -651,7 +663,7 @@ document.write(`
     <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">patch</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">patch</span>
 
-<span class="n">train_ds</span> <span class="o">=</span> <span class="n">FCALPatchPhotonDataset</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">log_global_norm</span><span class="p">,</span> <span class="n">minthrownE</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maxthrownE</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">train_ds</span> <span class="o">=</span> <span class="n">FCALPatchPhotonDataset</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">log_global_norm</span><span class="p">,</span> <span class="n">minthrownE</span><span class="o">=</span><span class="n">MIN_THROWN_E</span><span class="p">,</span> <span class="n">maxthrownE</span><span class="o">=</span><span class="n">MAX_THROWN_E</span><span class="p">)</span>
 
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
                           <span class="p">)</span>
@@ -680,25 +692,43 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Labels:&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;showerE:&quot;</span><span class="p">,</span> <span class="n">showerE</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;thrownE:&quot;</span><span class="p">,</span> <span class="n">thrownE</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
+
+<span class="c1"># Lets visualize a few patches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">patches</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+    <span class="n">thE</span> <span class="o">=</span> <span class="n">thrownE</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">MAX_THROWN_E</span> <span class="o">-</span> <span class="n">MIN_THROWN_E</span><span class="p">)</span> <span class="o">+</span> <span class="n">MIN_THROWN_E</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ShowerE: </span><span class="si">{</span><span class="n">showerE</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> GeV</span><span class="se">\n</span><span class="s1"> ThrownE: </span><span class="si">{</span><span class="n">thE</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> GeV&#39;</span><span class="p">)</span>
+    <span class="c1">#ax.axis(&#39;off&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Batch shape: torch.Size([512, 1, 11, 11])
 Labels: tensor([1, 1, 1, 1, 1, 1, 1, 1])
-showerE: tensor([1.5929, 1.3406, 2.0102, 1.0756, 1.2097, 0.8842, 1.0946, 1.7347])
-thrownE: tensor([0.6089, 0.3884, 0.9638, 0.1773, 0.2125, 0.0789, 0.0416, 0.6424])
+showerE: tensor([1.1621, 1.5685, 1.5358, 1.1107, 1.8179, 1.6467, 1.5649, 1.3636])
+thrownE: tensor([0.1622, 0.6643, 0.6157, 0.1952, 0.8398, 0.4465, 0.6838, 0.5151])
+</pre></div>
+</div>
+<img alt="../_images/16f427d5c25e835ba1e200e83beaa5da7411a63da234ccc8e396a9bee6098a13.png" src="../_images/16f427d5c25e835ba1e200e83beaa5da7411a63da234ccc8e396a9bee6098a13.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">notebook</span> <span class="n">controller</span> <span class="ow">is</span> <span class="n">DISPOSED</span><span class="o">.</span> 
+
+<span class="n">View</span> <span class="n">Jupyter</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;command:jupyter.viewOutput&#39;</span><span class="o">&gt;</span><span class="n">log</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="k">for</span> <span class="n">further</span> <span class="n">details</span><span class="o">.</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="step-4-diagnostic-plots">
-<h2>Step 4: Diagnostic plots<a class="headerlink" href="#step-4-diagnostic-plots" title="Link to this heading">#</a></h2>
+<h3>Step 4: Diagnostic plots<a class="headerlink" href="#step-4-diagnostic-plots" title="Link to this heading">#</a></h3>
 <p>Let us make a few diagnostic plots. We will be using these plots for visual comparison between generated samples and true distributions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_patch_metrics</span><span class="p">(</span><span class="n">patches</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">thrownE</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">patch_size</span> <span class="o">=</span> <span class="mi">11</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_patch_metrics</span><span class="p">(</span><span class="n">patches</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">thrownE</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">patch_size</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span> <span class="n">e_threshold</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute metrics for a batch of patches.</span>
 
@@ -722,9 +752,8 @@ thrownE: tensor([0.6089, 0.3884, 0.9638, 0.1773, 0.2125, 0.0789, 0.0416, 0.6424]
     <span class="c1"># Remove channel dimension</span>
     <span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (B, 11, 11)</span>
 
-    <span class="c1"># Number of hits (cells with energy &gt; 0)</span>
-    <span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.050</span>  <span class="c1"># GeV</span>
-    <span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span> <span class="o">*</span> <span class="p">(</span><span class="n">patches</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>  <span class="c1"># Zero out cells below threshold</span>
+    <span class="c1"># Number of hits (cells with energy &gt; 0.05 GeV)</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span> <span class="o">*</span> <span class="p">(</span><span class="n">patches</span> <span class="o">&gt;</span> <span class="n">e_threshold</span><span class="p">)</span>  <span class="c1"># Zero out cells below threshold</span>
     <span class="n">numHits</span> <span class="o">=</span> <span class="p">(</span><span class="n">patches</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># (B,)</span>
 
     <span class="c1"># Row and column indices of hits</span>
@@ -970,9 +999,10 @@ thrownE: tensor([0.6089, 0.3884, 0.9638, 0.1773, 0.2125, 0.0789, 0.0416, 0.6424]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/49c50acfe5814ef804ea3668a8257707b6437b25cf77ed0418c31b19bd6cd842.png" src="../_images/49c50acfe5814ef804ea3668a8257707b6437b25cf77ed0418c31b19bd6cd842.png" />
+<img alt="../_images/c8af6d1ae14c2f5b84e1ffc4229bbbd52769d8a0ab4cca5afd2c75c122d612f3.png" src="../_images/c8af6d1ae14c2f5b84e1ffc4229bbbd52769d8a0ab4cca5afd2c75c122d612f3.png" />
 </div>
 </div>
+</section>
 </section>
 <section id="gan-architecture">
 <h2>GAN architecture<a class="headerlink" href="#gan-architecture" title="Link to this heading">#</a></h2>
@@ -1377,24 +1407,6 @@ thrownE: tensor([0.6089, 0.3884, 0.9638, 0.1773, 0.2125, 0.0789, 0.0416, 0.6424]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">thrownE_values</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([1028., 1004.,  974., 1007., 1059.,  963.,  986.,  987.,  991.,
-        1001.]),
- array([3.93390656e-06, 1.00002289e-01, 2.00000644e-01, 2.99998999e-01,
-        3.99997354e-01, 4.99995708e-01, 5.99994063e-01, 6.99992418e-01,
-        7.99990773e-01, 8.99989128e-01, 9.99987483e-01]),
- &lt;BarContainer object of 10 artists&gt;)
-</pre></div>
-</div>
-<img alt="../_images/5c0850784e3a9236008f7ed5366371958f920feadf665eea9f7f559666f2f093.png" src="../_images/5c0850784e3a9236008f7ed5366371958f920feadf665eea9f7f559666f2f093.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">DO_TRAIN</span><span class="p">:</span>
     <span class="c1"># load the model from safetensors</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">safetensors.torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_file</span>
@@ -1424,11 +1436,34 @@ Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_gen_samples</span> <span class="o">=</span> <span class="mi">10_000</span>
-<span class="n">thrownE_vector</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">num_gen_samples</span><span class="p">)</span>
+<span class="n">min_th</span> <span class="o">=</span> <span class="mf">0.</span> <span class="c1"># Since the thrown was normalized</span>
+<span class="n">max_th</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Since the thrown was normalized</span>
+
+<span class="n">thrownE_vector</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_th</span><span class="p">,</span> <span class="n">max_th</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">num_gen_samples</span><span class="p">)</span>
 <span class="n">all_generated</span><span class="p">,</span> <span class="n">all_thrownE</span> <span class="o">=</span> <span class="n">run_inference</span><span class="p">(</span><span class="n">num_gen_samples</span><span class="p">,</span> <span class="n">thrownE_vector</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">inverse_transform</span><span class="o">=</span><span class="n">inv_log_global_norm</span><span class="p">)</span>
-<span class="n">gen_metrics</span> <span class="o">=</span> <span class="n">compute_patch_metrics</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_generated</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_thrownE</span><span class="p">))</span>
+<span class="n">gen_metrics</span> <span class="o">=</span> <span class="n">compute_patch_metrics</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_generated</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">thrownE_vector</span><span class="p">))</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lets visualize a few generated patches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_gen_samples</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">all_generated</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+        <span class="n">thE</span> <span class="o">=</span> <span class="n">all_thrownE</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">MAX_THROWN_E</span> <span class="o">-</span> <span class="n">MIN_THROWN_E</span><span class="p">)</span> <span class="o">+</span> <span class="n">MIN_THROWN_E</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;thrownE=</span><span class="si">{</span><span class="n">thE</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GeV&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cb6b83d11e47b1198840e5307b0bb92dbae7a3c0984f58d02482447665720286.png" src="../_images/cb6b83d11e47b1198840e5307b0bb92dbae7a3c0984f58d02482447665720286.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1438,9 +1473,35 @@ Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/de2f19adce5495137265dadeefe785eba8892c6661398fa44aab8136e52471cb.png" src="../_images/de2f19adce5495137265dadeefe785eba8892c6661398fa44aab8136e52471cb.png" />
+<img alt="../_images/77694e7a5e2c658dab7487fea48818ceaf92ec47f6b980a0fe1c653d03c05773.png" src="../_images/77694e7a5e2c658dab7487fea48818ceaf92ec47f6b980a0fe1c653d03c05773.png" />
 </div>
 </div>
+<section id="measuring-fidelity">
+<h3>Measuring Fidelity<a class="headerlink" href="#measuring-fidelity" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets measure distribution fidelity metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">wasserstein_distance</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_fidelity_metrics</span><span class="p">(</span><span class="n">real_data</span><span class="p">,</span> <span class="n">generated_data</span><span class="p">):</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;wasserstein_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wasserstein_distance</span><span class="p">(</span><span class="n">real_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">generated_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">metrics</span>
+<span class="n">fidelity_metrics</span> <span class="o">=</span> <span class="n">compute_fidelity_metrics</span><span class="p">(</span><span class="n">true_patches</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">all_generated</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fidelity Metrics between real and generated patches:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fidelity_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fidelity Metrics between real and generated patches:
+wasserstein_distance: 0.001032
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
@@ -1578,12 +1639,18 @@ Incorporate known detector response or conservation laws directly into the archi
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-fidelity">Measuring Fidelity</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#drawbacks-of-gan-based-approaches">Drawbacks of GAN-based Approaches</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#try-next">Try Next</a></li>
