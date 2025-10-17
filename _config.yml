@@ -5,16 +5,10 @@ title: Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025
 author: Karthik Suresh & Cristiano Fanelli
 copyright: "2025"
 logo : images/AI4eic_logo4.png  # A path to the book logo
-only_build_toc_files: true
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: off  # Don't execute notebooks during build
-
-# Define the name of the latex output file for PDF builds
-latex:
-  latex_documents:
-    targetname: dnp2025-tutorials.tex
 
 # In _config.yml
 bibtex_bibfiles:
@@ -42,6 +36,15 @@ html:
     hypothesis              : true
     utterances              : 
                             repo: "ai4eic/DNP2025-tutorials"
+
+#######################################################################################
+# Launch button settings
+launch_buttons:
+  notebook_interface        : "jupyterlab"  # The interface interactive links will activate ["classic", "jupyterlab"]
+  binderhub_url             : ""  # The URL of the BinderHub (e.g., https://mybinder.org)
+  jupyterhub_url            : ""  # The URL of the JupyterHub (e.g., https://datahub.berkeley.edu)
+  thebe                     : false  # Add a thebe button to pages (requires the repository to run on Binder)
+  colab_url                 : "https://colab.research.google.com" # The URL of Google Colab (https://colab.research.google.com)
 
 # Sphinx configuration
 sphinx:
