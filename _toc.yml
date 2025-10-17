@@ -25,10 +25,10 @@ parts:
   
   - caption: Generative AI for FCAL
     chapters:
-      - file: chapters/03-problem-description
-        title: Problem Formulation
       - url: https://docs.google.com/presentation/d/1PeEkzcUs_TDk2jAr2fCmnIxO0KrmyxYdlNIexPCGqiw/edit?usp=sharing
         title: Lecture -- GAN Overview
+      - file: chapters/03-problem-description
+        title: Problem Formulation
       - file: notebooks/03-gan-generation
   
   - caption: Appendix

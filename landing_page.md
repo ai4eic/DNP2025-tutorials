@@ -1,6 +1,6 @@
 # Deep Learning Tutorials for Experimental Nuclear Physics
 
-Welcome to the DNP 2025 Deep Learning Tutorials! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.
+Welcome to the DNP 2025 Deep Learning Tutorials presented at APS-DNP 2025 Data Science Workshop sessions! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.
 
 ## Overview
 
@@ -48,6 +48,9 @@ You can explore and download them at: [![Hugging Face Model](https://img.shields
 **DNP 2025 Tutorial Session**  
 Date: October 17, 2025  
 Location: Chicago, IL  
+Workshop Sessions: [1WD](https://schedule.aps.org/dnp/2025/events/1WD/2), [2WD](https://schedule.aps.org/dnp/2025/events/2WD/2)
+
+![](images/dnp2025_header_aps.png)
 
 For questions or feedback, please open an issue on our [GitHub repository](https://github.com/ai4eic/DNP2025-tutorials).
 

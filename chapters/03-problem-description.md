@@ -51,3 +51,53 @@ The dataset is built from reconstructed **photon showers** only. We will use the
    - This is used as the conditioning input to both generator and discriminator.
 
 The dataset can be found in [huggingface](https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/formatted_dataset/CNN4FCAL_GUN_PATCHSIZE_11.h5).
+
+
+
+```{figure} ../images/true_patches.png
+---
+alt: GAN training data
+width: 80%
+---
+:caption: A sample training dataset to generate FCAL shower energy patches is shown below. The pixel energies and thrownE are normalized as mentioned above.
+```
+
+
+## Data preprocessing
+
+For this demonstration, the dataset is restricted to events with **thrown photon energies between 1.0 GeV and 2.0 GeV**.
+
+This limited range serves two purposes:
+
+1. **Computational Feasibility:**  
+   Restricting to a narrow energy window ensures that the GAN can be trained efficiently — even on CPU — within a reasonable number of epochs.  
+   It also reduces the overall dynamic range of shower intensities, simplifying the conditional learning task.
+
+2. **Controlled Conditioning:**  
+   By fixing a limited energy range, the model focuses on learning **fine-grained variations in shower shape** rather than global scaling with energy.  
+   This allows clearer interpretation of the conditioning effect and better visual inspection of generated patterns.
+
+### Hit Energy Threshold
+
+Because a GAN learns to generate *physically plausible* but not *pixel-by-pixel identical* hit patterns, a small energy threshold is applied to define realistic cell occupancies.  
+In particular, we apply a **per-cell energy cut of 0.05 GeV (50 MeV)** when evaluating or visualizing generated showers:
+
+$$
+E_{\text{cell}} \ge 0.05 \, \text{GeV}
+$$
+
+This threshold reflects the approximate detection sensitivity of the Forward Calorimeter and helps eliminate numerical noise or unphysical low-level fluctuations in the generated images.
+
+By doing so, the comparison between real and generated showers focuses on meaningful energy deposits — i.e., those that would actually produce measurable detector responses — rather than on statistical pixel noise or reconstruction artifacts.
+
+### Practical Implication
+
+With these cuts:
+- The GAN trains faster and more stably due to reduced input variance.  
+- Visual and quantitative metrics (e.g., occupancy, E1/E9) become more physically interpretable.  
+- Generated showers correspond to realistic FCAL responses within the 1–2 GeV photon energy regime, making them ideal for illustrating the principles of **conditional generative modeling in calorimeter simulation**.
+
+
+```{note}
+Model trained on the full range with $0.01 \leq \text{thrownE} \leq 4.0~[\text{GeV}]$ with a minimum Hit Energy threshold of $0.01$[GeV] can be found in [`generatorGAN-FCAL-100MeV-4GeV.safetensors` ![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface)](https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-100MeV-4GeV.safetensors) 
+```
