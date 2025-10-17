@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Deep Learning Tutorials for Experimental Nuclear Physics &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
+    <title>Building the Tutorial &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
   
   
   
@@ -92,13 +92,10 @@ commentsRunWhenDOMLoaded(addUtterances);
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'landing_page';</script>
-    <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/landing_page.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'BUILD';</script>
+    <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/BUILD.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction to GlueX" href="chapters/01-intro-to-gluex.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -181,7 +178,7 @@ commentsRunWhenDOMLoaded(addUtterances);
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="landing_page.html">
   
   
   
@@ -303,7 +300,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/edit/main/landing_page.md" target="_blank"
+      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/edit/main/BUILD.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -320,7 +317,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/issues/new?title=Issue%20on%20page%20%2Flanding_page.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/ai4eic/DNP2025-tutorials/issues/new?title=Issue%20on%20page%20%2FBUILD.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -350,7 +347,7 @@ commentsRunWhenDOMLoaded(addUtterances);
       
       
       
-      <li><a href="_sources/landing_page.md" target="_blank"
+      <li><a href="_sources/BUILD.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -434,7 +431,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Deep Learning Tutorials for Experimental Nuclear Physics</h1>
+    <h1>Building the Tutorial</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -444,14 +441,19 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-goals">Tutorial Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience">Target Audience</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-and-models">Dataset and models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#event-information">Event Information</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-github-pages-recommended">Option 1: GitHub Pages (Recommended)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-local-build">Option 2: Local Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-3-local-markdown-reader">Option 3: Local Markdown Reader</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-4-simple-web-server">Option 4: Simple Web Server</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-organization">Chapter Organization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-on-github">Viewing on GitHub</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-files">Configuration Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
             </nav>
         </div>
@@ -463,100 +465,144 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="deep-learning-tutorials-for-experimental-nuclear-physics">
-<h1>Deep Learning Tutorials for Experimental Nuclear Physics<a class="headerlink" href="#deep-learning-tutorials-for-experimental-nuclear-physics" title="Link to this heading">#</a></h1>
-<p>Welcome to the DNP 2025 Deep Learning Tutorials presented at APS-DNP 2025 Data Science Workshop sessions! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX in Hall-D Jefferson Lab.</p>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>These tutorials are designed for Nuclear and Paricle Physics and Researchers. We focus on two main applications of deep learning:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="building-the-tutorial">
+<h1>Building the Tutorial<a class="headerlink" href="#building-the-tutorial" title="Link to this heading">#</a></h1>
+<section id="jupyter-book">
+<h2>Jupyter Book<a class="headerlink" href="#jupyter-book" title="Link to this heading">#</a></h2>
+<p>This tutorial is built using Jupyter Book, a modern documentation framework. There are several ways to build and view it:</p>
+<section id="option-1-github-pages-recommended">
+<h3>Option 1: GitHub Pages (Recommended)<a class="headerlink" href="#option-1-github-pages-recommended" title="Link to this heading">#</a></h3>
+<p>The tutorial is automatically built and deployed to GitHub Pages:</p>
+<ul class="simple">
+<li><p><strong>Live Site:</strong> <a class="reference external" href="https://ai4eic.github.io/DNP2025-tutorials/">https://ai4eic.github.io/DNP2025-tutorials/</a></p></li>
+</ul>
+<p>The site is automatically updated when changes are pushed to the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch.</p>
+</section>
+<section id="option-2-local-build">
+<h3>Option 2: Local Build<a class="headerlink" href="#option-2-local-build" title="Link to this heading">#</a></h3>
+<p>To build and view the book locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ai4eic/DNP2025-tutorials.git
+<span class="nb">cd</span><span class="w"> </span>DNP2025-tutorials
+
+<span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Build the book</span>
+jupyter-book<span class="w"> </span>build<span class="w"> </span>.
+
+<span class="c1"># Open the built book in your browser</span>
+<span class="c1"># The HTML files are in _build/html/</span>
+open<span class="w"> </span>_build/html/index.html<span class="w">  </span><span class="c1"># macOS</span>
+xdg-open<span class="w"> </span>_build/html/index.html<span class="w">  </span><span class="c1"># Linux</span>
+start<span class="w"> </span>_build/html/index.html<span class="w">  </span><span class="c1"># Windows</span>
+</pre></div>
+</div>
+</section>
+<section id="option-3-local-markdown-reader">
+<h3>Option 3: Local Markdown Reader<a class="headerlink" href="#option-3-local-markdown-reader" title="Link to this heading">#</a></h3>
+<p>You can also read the Markdown files directly:</p>
+<p><strong>Using VS Code:</strong></p>
 <ol class="arabic simple">
-<li><p><strong>CNN-based Classification</strong>: Using Convolutional Neural Networks to classify FCAL showers and distinguish between photons and splitoffs</p></li>
-<li><p><strong>Generative AI</strong>: Building generative models to simulate FCAL photon showers based on their kinematics.</p></li>
+<li><p>Install the “Markdown Preview Enhanced” extension</p></li>
+<li><p>Open any chapter in <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">Ctrl+K</span> <span class="pre">V</span></code> (or <code class="docutils literal notranslate"><span class="pre">Cmd+K</span> <span class="pre">V</span></code> on Mac) to open preview</p></li>
+</ol>
+<p><strong>Using Grip:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install grip</span>
+pip<span class="w"> </span>install<span class="w"> </span>grip
+
+<span class="c1"># Serve the README</span>
+grip<span class="w"> </span>README.md<span class="w"> </span><span class="m">6419</span>
+
+<span class="c1"># Open http://localhost:6419 in your browser</span>
+</pre></div>
+</div>
+</section>
+<section id="option-4-simple-web-server">
+<h3>Option 4: Simple Web Server<a class="headerlink" href="#option-4-simple-web-server" title="Link to this heading">#</a></h3>
+<p>You can serve the built HTML files with any web server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the book first</span>
+jupyter-book<span class="w"> </span>build<span class="w"> </span>.
+
+<span class="c1"># Serve the HTML files</span>
+<span class="nb">cd</span><span class="w"> </span>_build/html
+python<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8000</span>
+
+<span class="c1"># Open http://localhost:8000 in your browser</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="chapter-organization">
+<h2>Chapter Organization<a class="headerlink" href="#chapter-organization" title="Link to this heading">#</a></h2>
+<p>The tutorial is organized as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code> - Main introduction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUMMARY.md</span></code> - Table of contents</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chapters/</span></code> - Individual chapter files</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">01-overview.md</span></code> through <code class="docutils literal notranslate"><span class="pre">21-faq.md</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
+<p>To add or modify content:</p>
+<ol class="arabic simple">
+<li><p>Edit the relevant Markdown file in <code class="docutils literal notranslate"><span class="pre">chapters/</span></code></p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">SUMMARY.md</span></code> if adding new chapters</p></li>
+<li><p>Test locally using one of the methods above</p></li>
+<li><p>Submit a pull request</p></li>
 </ol>
 </section>
-<section id="tutorial-goals">
-<h2>Tutorial Goals<a class="headerlink" href="#tutorial-goals" title="Link to this heading">#</a></h2>
-<p>By the end of these tutorials, you will be able to:</p>
+<section id="viewing-on-github">
+<h2>Viewing on GitHub<a class="headerlink" href="#viewing-on-github" title="Link to this heading">#</a></h2>
+<p>GitHub automatically renders Markdown files, so you can:</p>
+<ol class="arabic simple">
+<li><p>Navigate to the repository on GitHub</p></li>
+<li><p>Browse the <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory</p></li>
+<li><p>Click on any <code class="docutils literal notranslate"><span class="pre">.md</span></code> file to view it</p></li>
+</ol>
+<p>Start with <a class="reference internal" href="#README.md"><span class="xref myst">README.md</span></a> and follow the links in <a class="reference internal" href="SUMMARY.html"><span class="std std-doc">SUMMARY.md</span></a>.</p>
+</section>
+<section id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Understand the physics behind FCAL showers and the importance of accurate classification</p></li>
-<li><p>Prepare and preprocess FCAL data for deep learning applications</p></li>
-<li><p>Build and train CNN models for binary classification (photons vs splitoffs)</p></li>
-<li><p>Develop generative models (GANs, VAEs, or diffusion models) for FCAL shower simulation</p></li>
-<li><p>Evaluate model performance using physics-informed metrics</p></li>
-<li><p>Apply these techniques to your own nuclear physics research</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> - Jupyter Book configuration (title, author, repository links, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> - Table of contents structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.github/workflows/deploy-book.yml</span></code> - GitHub Actions workflow for automatic deployment</p></li>
 </ul>
 </section>
-<section id="target-audience">
-<h2>Target Audience<a class="headerlink" href="#target-audience" title="Link to this heading">#</a></h2>
-<p>These tutorials are intended for:</p>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Graduate students and postdocs in nuclear physics</p></li>
-<li><p>Researchers working on calorimeter systems</p></li>
-<li><p>Scientists interested in applying ML to experimental physics</p></li>
-<li><p>Anyone wanting to learn about deep learning in the context of particle physics</p></li>
+<li><p>Math equations are rendered using MathJax</p></li>
+<li><p>The book supports both Markdown (<code class="docutils literal notranslate"><span class="pre">.md</span></code>) and Jupyter Notebook (<code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>) files</p></li>
+<li><p>For production deployment, the book is automatically deployed to GitHub Pages via GitHub Actions</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch contains the built HTML files</p></li>
 </ul>
 </section>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Basic understanding of nuclear physics and particle detectors</p></li>
-<li><p>Python programming experience</p></li>
-<li><p>Familiarity with NumPy and basic data analysis</p></li>
-<li><p>(Optional) Prior exposure to machine learning concepts</p></li>
-</ul>
-</section>
-<section id="dataset-and-models">
-<h2>Dataset and models<a class="headerlink" href="#dataset-and-models" title="Link to this heading">#</a></h2>
-<p>Dataset used in this tutorial: <a class="reference external" href="https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial"><img alt="Hugging Face Dataset" src="https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface" /></a></p>
-<p>The trained models are archived for easy access and reproducibility.
-You can explore and download them at: <a class="reference external" href="https://huggingface.co/AI4EIC/DNP2025-tutorial"><img alt="Hugging Face Model" src="https://img.shields.io/badge/HuggingFace-Model-orange.svg?logo=huggingface" /></a></p>
-</section>
-<section id="event-information">
-<h2>Event Information<a class="headerlink" href="#event-information" title="Link to this heading">#</a></h2>
-<p><strong>DNP 2025 Tutorial Session</strong><br />
-Date: October 17, 2025<br />
-Location: Chicago, IL<br />
-Workshop Sessions: <a class="reference external" href="https://schedule.aps.org/dnp/2025/events/1WD/2">1WD</a>, <a class="reference external" href="https://schedule.aps.org/dnp/2025/events/2WD/2">2WD</a></p>
-<p><img alt="" src="_images/dnp2025_header_aps.png" /></p>
-<p>For questions or feedback, please open an issue on our <a class="reference external" href="https://github.com/ai4eic/DNP2025-tutorials">GitHub repository</a>.</p>
-<hr class="docutils" />
-<div class="dropdrown admonition">
-<p class="admonition-title">Authors Acknowledgements to GlueX</p>
-<ul class="simple">
-<li><p>This tutorial is part of the AI4EIC collaboration’s effort to bring modern machine learning techniques to experimental nuclear physics.</p></li>
-<li><p>We gratefully acknowledge the <a class="reference external" href="https://gluex.org/">GlueX Collaboration</a> for the software framework and the public release of the Monte Carlo simulation data used in this work <a class="reference external" href="https://gluex.org/thanks.html">GlueX acknowledgements</a>.</p></li>
-</ul>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<p><strong>Build Errors:</strong>
+If you encounter errors during build, ensure you have the latest version of jupyter-book:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>jupyter-book
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="chapters/01-intro-to-gluex.html">Introduction to GlueX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chapters/01-intro-to-fcal.html">Introduction to FCAL</a></li>
-</ul>
+<p><strong>Missing Dependencies:</strong>
+Install all required dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">CNN for FCAL</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="chapters/02-problem-description.html">Problem Formulation</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1Bd6isqCNZgUn0Mho43jsID-rZDn7fHWo3y0gd4ngI8Q/edit?usp=drive_link">Lecture -- CNN Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/02-dataset-preparation.html">Data Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/02-cnn-classification.html">CNN for FCAL Shower Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/02-cnn-regression.html">CNN for FCAL Shower Regression</a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1PeEkzcUs_TDk2jAr2fCmnIxO0KrmyxYdlNIexPCGqiw/edit?usp=sharing">Lecture -- GAN Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chapters/03-problem-description.html">Problem Formulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/03-gan-generation.html">Conditional GAN for FCAL Shower generation</a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/CNN_DNP2025_01.html">Primer for CNN using `PyTorch`</a></li>
-</ul>
+<p><strong>Math Rendering:</strong>
+LaTeX equations should render automatically with MathJax. If you have issues, check the <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> configuration.</p>
+<p><strong>Clean Build:</strong>
+If you need to clean the build cache:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter-book<span class="w"> </span>clean<span class="w"> </span>.
+jupyter-book<span class="w"> </span>build<span class="w"> </span>.
+</pre></div>
 </div>
 </section>
 </section>
@@ -591,15 +637,6 @@ Workshop Sessions: <a class="reference external" href="https://schedule.aps.org/
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="chapters/01-intro-to-gluex.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Introduction to GlueX</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -616,14 +653,19 @@ Workshop Sessions: <a class="reference external" href="https://schedule.aps.org/
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-goals">Tutorial Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience">Target Audience</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-and-models">Dataset and models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#event-information">Event Information</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-github-pages-recommended">Option 1: GitHub Pages (Recommended)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-local-build">Option 2: Local Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-3-local-markdown-reader">Option 3: Local Markdown Reader</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-4-simple-web-server">Option 4: Simple Web Server</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-organization">Chapter Organization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-on-github">Viewing on GitHub</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-files">Configuration Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
   </nav></div>
 
