@@ -2,11 +2,9 @@
 
 Welcome to the DNP 2025 Deep Learning Tutorials! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.
 
-**View the book online:** [https://ai4eic.github.io/DNP2025-tutorials/](https://ai4eic.github.io/DNP2025-tutorials/)
-
 ## Overview
 
-These tutorials are designed for physicists and researchers working on the GlueX experiment at Jefferson Lab. We focus on two main applications of deep learning:
+These tutorials are designed for Nuclear and Paricle Physics and Researchers. We focus on two main applications of deep learning:
 
 1. **CNN-based Classification**: Using Convolutional Neural Networks to classify FCAL showers and distinguish between photons and splitoffs
 2. **Generative AI**: Building generative models to simulate FCAL photon showers based on their kinematics.
@@ -37,6 +35,14 @@ These tutorials are intended for:
 - Familiarity with NumPy and basic data analysis
 - (Optional) Prior exposure to machine learning concepts
 
+## Dataset and models
+
+Dataset used in this tutorial: [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface)](https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial)
+
+The trained models are archived for easy access and reproducibility.
+You can explore and download them at: [![Hugging Face Model](https://img.shields.io/badge/HuggingFace-Model-orange.svg?logo=huggingface)](https://huggingface.co/AI4EIC/DNP2025-tutorial)
+
+
 ## Event Information
 
 **DNP 2025 Tutorial Session**  
@@ -47,7 +53,13 @@ For questions or feedback, please open an issue on our [GitHub repository](https
 
 ---
 
-*This tutorial is part of the AI4EIC collaboration's effort to bring modern machine learning techniques to experimental nuclear physics.*
+
+```{admonition} Authors Acknowledgements to GlueX
+:class: dropdrown
+* This tutorial is part of the AI4EIC collaboration’s effort to bring modern machine learning techniques to experimental nuclear physics.
+
+* We gratefully acknowledge the [GlueX Collaboration](https://gluex.org/) for the software framework and the public release of the Monte Carlo simulation data used in this work [GlueX acknowledgements](https://gluex.org/thanks.html).
+```
 
 ```{tableofcontents}
 ```

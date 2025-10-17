@@ -50,7 +50,4 @@ The dataset is built from reconstructed **photon showers** only. We will use the
    - The thrown photon energy ($E_{\text{thrown}}$) is recorded for each patch and normalized to [0, 1].  
    - This is used as the conditioning input to both generator and discriminator.
 
-The dataset can be found in [huggingface](https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/formatted_dataset/CNN4FCAL_GUN_PATCHSIZE_11.h5)
-
----
-
+The dataset can be found in [huggingface](https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/formatted_dataset/CNN4FCAL_GUN_PATCHSIZE_11.h5).
