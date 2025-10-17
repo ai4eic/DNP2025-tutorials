@@ -63,7 +63,7 @@
     <link rel="canonical" href="https://ai4eic.github.io/DNP2025-tutorials/chapters/03-problem-description.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Conditional GAN for generation" href="../notebooks/03-gan-generation.html" />
+    <link rel="next" title="Conditional GAN for FCAL Shower generation" href="../notebooks/03-gan-generation.html" />
     <link rel="prev" title="CNN for FCAL Shower Regression" href="../notebooks/02-cnn-regression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -183,9 +183,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Problem Formulation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1PeEkzcUs_TDk2jAr2fCmnIxO0KrmyxYdlNIexPCGqiw/edit?usp=sharing">Lecture -- GAN Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/03-gan-generation.html">Conditional GAN for generation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Problem Formulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/03-gan-generation.html">Conditional GAN for FCAL Shower generation</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
 <ul class="nav bd-sidenav">
@@ -404,6 +404,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-and-preprocessing">Dataset and Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hit-energy-threshold">Hit Energy Threshold</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-implication">Practical Implication</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -471,6 +476,50 @@ E' = \frac{\log(1 + E / E_0)}{\log(1 + E_{\text{max}} / E_0)}
 </li>
 </ol>
 <p>The dataset can be found in <a class="reference external" href="https://huggingface.co/datasets/AI4EIC/DNP2025-tutorial/resolve/main/formatted_dataset/CNN4FCAL_GUN_PATCHSIZE_11.h5">huggingface</a>.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/true_patches.png"><img alt="GAN training data" src="../_images/true_patches.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">:caption: A sample training dataset to generate FCAL shower energy patches is shown below. The pixel energies and thrownE are normalized as mentioned above.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="data-preprocessing">
+<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h2>
+<p>For this demonstration, the dataset is restricted to events with <strong>thrown photon energies between 1.0 GeV and 2.0 GeV</strong>.</p>
+<p>This limited range serves two purposes:</p>
+<ol class="arabic simple">
+<li><p><strong>Computational Feasibility:</strong><br />
+Restricting to a narrow energy window ensures that the GAN can be trained efficiently — even on CPU — within a reasonable number of epochs.<br />
+It also reduces the overall dynamic range of shower intensities, simplifying the conditional learning task.</p></li>
+<li><p><strong>Controlled Conditioning:</strong><br />
+By fixing a limited energy range, the model focuses on learning <strong>fine-grained variations in shower shape</strong> rather than global scaling with energy.<br />
+This allows clearer interpretation of the conditioning effect and better visual inspection of generated patterns.</p></li>
+</ol>
+<section id="hit-energy-threshold">
+<h3>Hit Energy Threshold<a class="headerlink" href="#hit-energy-threshold" title="Link to this heading">#</a></h3>
+<p>Because a GAN learns to generate <em>physically plausible</em> but not <em>pixel-by-pixel identical</em> hit patterns, a small energy threshold is applied to define realistic cell occupancies.<br />
+In particular, we apply a <strong>per-cell energy cut of 0.05 GeV (50 MeV)</strong> when evaluating or visualizing generated showers:</p>
+<div class="math notranslate nohighlight">
+\[
+E_{\text{cell}} \ge 0.05 \, \text{GeV}
+\]</div>
+<p>This threshold reflects the approximate detection sensitivity of the Forward Calorimeter and helps eliminate numerical noise or unphysical low-level fluctuations in the generated images.</p>
+<p>By doing so, the comparison between real and generated showers focuses on meaningful energy deposits — i.e., those that would actually produce measurable detector responses — rather than on statistical pixel noise or reconstruction artifacts.</p>
+</section>
+<section id="practical-implication">
+<h3>Practical Implication<a class="headerlink" href="#practical-implication" title="Link to this heading">#</a></h3>
+<p>With these cuts:</p>
+<ul class="simple">
+<li><p>The GAN trains faster and more stably due to reduced input variance.</p></li>
+<li><p>Visual and quantitative metrics (e.g., occupancy, E1/E9) become more physically interpretable.</p></li>
+<li><p>Generated showers correspond to realistic FCAL responses within the 1–2 GeV photon energy regime, making them ideal for illustrating the principles of <strong>conditional generative modeling in calorimeter simulation</strong>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Model trained on the full range with <span class="math notranslate nohighlight">\(0.01 \leq \text{thrownE} \leq 4.0~[\text{GeV}]\)</span> with a minimum Hit Energy threshold of <span class="math notranslate nohighlight">\(0.01\)</span>[GeV] can be found in <a class="reference external" href="https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-100MeV-4GeV.safetensors"><code class="docutils literal notranslate"><span class="pre">generatorGAN-FCAL-100MeV-4GeV.safetensors</span></code> <img alt="Hugging Face Dataset" src="https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface" /></a></p>
+</div>
+</section>
 </section>
 </section>
 
@@ -518,7 +567,7 @@ E' = \frac{\log(1 + E / E_0)}{\log(1 + E_{\text{max}} / E_0)}
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Conditional GAN for generation</p>
+        <p class="prev-next-title">Conditional GAN for FCAL Shower generation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -540,6 +589,11 @@ E' = \frac{\log(1 + E / E_0)}{\log(1 + E_{\text{max}} / E_0)}
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-and-preprocessing">Dataset and Preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hit-energy-threshold">Hit Energy Threshold</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-implication">Practical Implication</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

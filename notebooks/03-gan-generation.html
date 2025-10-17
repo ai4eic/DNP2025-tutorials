@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Conditional GAN for generation &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
+    <title>Conditional GAN for FCAL Shower generation &#8212; Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</title>
   
   
   
@@ -183,9 +183,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Generative AI for FCAL</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/03-problem-description.html">Problem Formulation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://docs.google.com/presentation/d/1PeEkzcUs_TDk2jAr2fCmnIxO0KrmyxYdlNIexPCGqiw/edit?usp=sharing">Lecture -- GAN Overview</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Conditional GAN for generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/03-problem-description.html">Problem Formulation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Conditional GAN for FCAL Shower generation</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
 <ul class="nav bd-sidenav">
@@ -392,7 +392,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Conditional GAN for generation</h1>
+    <h1>Conditional GAN for FCAL Shower generation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -402,15 +402,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hit-energy-threshold">Hit Energy Threshold</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-implication">Practical Implication</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generator-network">Generator Network</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminator-network">Discriminator Network</a></li>
@@ -427,6 +422,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-fidelity">Measuring Fidelity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-conditioning">Verifying conditioning</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
@@ -446,39 +442,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="conditional-gan-for-generation">
-<h1>Conditional GAN for generation<a class="headerlink" href="#conditional-gan-for-generation" title="Link to this heading">#</a></h1>
-<section id="data-preprocessing">
-<h2>Data preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading">#</a></h2>
-<p>For this demonstration, the dataset is restricted to events with <strong>thrown photon energies between 1.0 GeV and 2.0 GeV</strong>.<br />
-This limited range serves two purposes:</p>
-<ol class="arabic simple">
-<li><p><strong>Computational Feasibility:</strong><br />
-Restricting to a narrow energy window ensures that the GAN can be trained efficiently — even on CPU — within a reasonable number of epochs.<br />
-It also reduces the overall dynamic range of shower intensities, simplifying the conditional learning task.</p></li>
-<li><p><strong>Controlled Conditioning:</strong><br />
-By fixing a limited energy range, the model focuses on learning <strong>fine-grained variations in shower shape</strong> rather than global scaling with energy.<br />
-This allows clearer interpretation of the conditioning effect and better visual inspection of generated patterns.</p></li>
-</ol>
-<section id="hit-energy-threshold">
-<h3>Hit Energy Threshold<a class="headerlink" href="#hit-energy-threshold" title="Link to this heading">#</a></h3>
-<p>Because a GAN learns to generate <em>physically plausible</em> but not <em>pixel-by-pixel identical</em> hit patterns, a small energy threshold is applied to define realistic cell occupancies.<br />
-In particular, we apply a <strong>per-cell energy cut of 0.05 GeV (50 MeV)</strong> when evaluating or visualizing generated showers:</p>
-<div class="math notranslate nohighlight">
-\[
-E_{\text{cell}} \ge 0.05 \, \text{GeV}
-\]</div>
-<p>This threshold reflects the approximate detection sensitivity of the Forward Calorimeter and helps eliminate numerical noise or unphysical low-level fluctuations in the generated images.</p>
-<p>By doing so, the comparison between real and generated showers focuses on meaningful energy deposits — i.e., those that would actually produce measurable detector responses — rather than on statistical pixel noise or reconstruction artifacts.</p>
-</section>
-<section id="practical-implication">
-<h3>Practical Implication<a class="headerlink" href="#practical-implication" title="Link to this heading">#</a></h3>
-<p>With these cuts:</p>
-<ul class="simple">
-<li><p>The GAN trains faster and more stably due to reduced input variance.</p></li>
-<li><p>Visual and quantitative metrics (e.g., occupancy, E1/E9) become more physically interpretable.</p></li>
-<li><p>Generated showers correspond to realistic FCAL responses within the 1–2 GeV photon energy regime, making them ideal for illustrating the principles of <strong>conditional generative modeling in calorimeter simulation</strong>.</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="conditional-gan-for-fcal-shower-generation">
+<h1>Conditional GAN for FCAL Shower generation<a class="headerlink" href="#conditional-gan-for-fcal-shower-generation" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install h5py scikit-learn torch torchvision tqdm safetensors autograd torchmetrics &gt; /dev/null
@@ -568,9 +533,8 @@ E_{\text{cell}} \ge 0.05 \, \text{GeV}
 <p>This is exactly the same as in <a class="reference internal" href="02-cnn-regression.html"><span class="std std-doc">CNN for Regression</span></a>.</p>
 </div>
 <p>We are using the same <code class="docutils literal notranslate"><span class="pre">.h5</span></code> dataset for regression. when we process it, We will be simply selecting out photons only to perform our training</p>
-</section>
 <section id="step-1-open-and-inspect-the-h5-file">
-<h3>Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File<a class="headerlink" href="#step-1-open-and-inspect-the-h5-file" title="Link to this heading">#</a></h3>
+<h2>Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File<a class="headerlink" href="#step-1-open-and-inspect-the-h5-file" title="Link to this heading">#</a></h2>
 <p>We can open the dataset and confirm whats inside it</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -592,7 +556,7 @@ E_{\text{cell}} \ge 0.05 \, \text{GeV}
 </div>
 </section>
 <section id="step-2-create-a-custom-pytorch-dataset">
-<h3>Step 2: Create a Custom PyTorch Dataset<a class="headerlink" href="#step-2-create-a-custom-pytorch-dataset" title="Link to this heading">#</a></h3>
+<h2>Step 2: Create a Custom PyTorch Dataset<a class="headerlink" href="#step-2-create-a-custom-pytorch-dataset" title="Link to this heading">#</a></h2>
 <p>This dataset will:</p>
 <ul class="simple">
 <li><p>Read directly from the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> file</p></li>
@@ -674,7 +638,7 @@ E_{\text{cell}} \ge 0.05 \, \text{GeV}
 </div>
 </section>
 <section id="step-3-create-dataset-and-dataloader-objects">
-<h3>Step 3: Create Dataset and DataLoader Objects<a class="headerlink" href="#step-3-create-dataset-and-dataloader-objects" title="Link to this heading">#</a></h3>
+<h2>Step 3: Create Dataset and DataLoader Objects<a class="headerlink" href="#step-3-create-dataset-and-dataloader-objects" title="Link to this heading">#</a></h2>
 <p>The entire dataset will be used for training here. Let us normalize each of the images with the total energy of all the hits in the shower</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -731,7 +695,7 @@ E_{\text{cell}} \ge 0.05 \, \text{GeV}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(434845, 850)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(113758, 223)
 </pre></div>
 </div>
 </div>
@@ -763,16 +727,16 @@ E_{\text{cell}} \ge 0.05 \, \text{GeV}
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Batch shape: torch.Size([512, 1, 11, 11])
 Labels: tensor([1, 1, 1, 1, 1, 1, 1, 1])
-showerE: tensor([0.3325, 3.5390, 2.3319, 0.4360, 0.5163, 0.6927, 2.1972, 1.8692])
-thrownE: tensor([0.0698, 0.8418, 0.5843, 0.0888, 0.0891, 0.1498, 0.5441, 0.3809])
+showerE: tensor([1.1265, 1.7753, 1.8933, 1.1213, 1.8121, 0.8762, 1.4885, 1.5860])
+thrownE: tensor([0.1288, 0.5836, 0.8712, 0.1819, 0.8454, 0.0968, 0.6243, 0.5636])
 </pre></div>
 </div>
-<img alt="../_images/d24527cc2fbf1a0ffe8999a2c6c81ceba3277b52ba3fd1494deb73f708cf8dee.png" src="../_images/d24527cc2fbf1a0ffe8999a2c6c81ceba3277b52ba3fd1494deb73f708cf8dee.png" />
+<img alt="../_images/aa7f79e81610c4fffde74a5868456d34bf0144acd34e494fd28c9c7a9182db58.png" src="../_images/aa7f79e81610c4fffde74a5868456d34bf0144acd34e494fd28c9c7a9182db58.png" />
 </div>
 </div>
 </section>
 <section id="step-4-diagnostic-plots">
-<h3>Step 4: Diagnostic plots<a class="headerlink" href="#step-4-diagnostic-plots" title="Link to this heading">#</a></h3>
+<h2>Step 4: Diagnostic plots<a class="headerlink" href="#step-4-diagnostic-plots" title="Link to this heading">#</a></h2>
 <p>Let us make a few diagnostic plots. We will be using these plots for visual comparison between generated samples and true distributions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1047,10 +1011,9 @@ thrownE: tensor([0.0698, 0.8418, 0.5843, 0.0888, 0.0891, 0.1498, 0.5441, 0.3809]
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/00e062c612505fcc4a238b70cc7f8eaf0622f2e363eed2a461370ed424a3f8f7.png" src="../_images/00e062c612505fcc4a238b70cc7f8eaf0622f2e363eed2a461370ed424a3f8f7.png" />
+<img alt="../_images/d96f28dc01e4e9dc7717815d2deaeb81a0f1deb0c7f47d0592331a8d2d961fbd.png" src="../_images/d96f28dc01e4e9dc7717815d2deaeb81a0f1deb0c7f47d0592331a8d2d961fbd.png" />
 </div>
 </div>
-</section>
 </section>
 <section id="gan-architecture">
 <h2>GAN architecture<a class="headerlink" href="#gan-architecture" title="Link to this heading">#</a></h2>
@@ -1507,8 +1470,17 @@ The generator updates less frequently but with higher-quality gradients, balanci
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ File already exists: data/generatorGAN-FCAL-1-2GeV.safetensors
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>⬇️  Downloading generatorGAN-FCAL-1-2GeV.safetensors from https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-1-2GeV.safetensors
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>generatorGAN-FCAL-1-2GeV.safetensors: 516kB [00:00, 1.05MB/s]                            
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Download complete: data/generatorGAN-FCAL-1-2GeV.safetensors
 Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
@@ -1548,7 +1520,7 @@ Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cb6b83d11e47b1198840e5307b0bb92dbae7a3c0984f58d02482447665720286.png" src="../_images/cb6b83d11e47b1198840e5307b0bb92dbae7a3c0984f58d02482447665720286.png" />
+<img alt="../_images/7573755e20798ea35af24a432509cd39d52f60f71638728b3f236c01f9df424d.png" src="../_images/7573755e20798ea35af24a432509cd39d52f60f71638728b3f236c01f9df424d.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1558,7 +1530,7 @@ Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/77694e7a5e2c658dab7487fea48818ceaf92ec47f6b980a0fe1c653d03c05773.png" src="../_images/77694e7a5e2c658dab7487fea48818ceaf92ec47f6b980a0fe1c653d03c05773.png" />
+<img alt="../_images/3a971fcdc3b8f7cfdc1bee634d2152d4075435f9cd264a28219e38a0a8cf3a56.png" src="../_images/3a971fcdc3b8f7cfdc1bee634d2152d4075435f9cd264a28219e38a0a8cf3a56.png" />
 </div>
 </div>
 <section id="measuring-fidelity">
@@ -1572,18 +1544,53 @@ Loading model from data/generatorGAN-FCAL-1-2GeV.safetensors
     <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;wasserstein_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wasserstein_distance</span><span class="p">(</span><span class="n">real_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">generated_data</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">metrics</span>
+
 <span class="n">fidelity_metrics</span> <span class="o">=</span> <span class="n">compute_fidelity_metrics</span><span class="p">(</span><span class="n">true_patches</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">all_generated</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fidelity Metrics between real and generated patches:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fidelity_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># LEts generate some random noise patch and measure fidelity metrics</span>
+<span class="n">random_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">true_patches</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">random_noise_metrics</span> <span class="o">=</span> <span class="n">compute_fidelity_metrics</span><span class="p">(</span><span class="n">true_patches</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">random_noise</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fidelity Metrics between real and random noise patches:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">random_noise_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fidelity Metrics between real and generated patches:
-wasserstein_distance: 0.001032
+wasserstein_distance: 0.001197
+Fidelity Metrics between real and random noise patches:
+wasserstein_distance: 0.489269
 </pre></div>
 </div>
+</div>
+</div>
+</section>
+<section id="verifying-conditioning">
+<h3>Verifying conditioning<a class="headerlink" href="#verifying-conditioning" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">minthE</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># This is normalized value</span>
+<span class="n">maxthE</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="c1"># This is normalized value</span>
+<span class="n">_allthrownE</span> <span class="o">=</span> <span class="n">train_ds</span><span class="o">.</span><span class="n">thrownE</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">_allthrownE</span> <span class="o">&gt;=</span> <span class="n">minthE</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">_allthrownE</span> <span class="o">&lt;</span> <span class="n">maxthE</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Lets select true patches</span>
+<span class="n">true_patches_sel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">train_ds</span><span class="o">.</span><span class="n">patches</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N, 1, 11, 11)</span>
+
+<span class="n">true_metrics_sel</span> <span class="o">=</span> <span class="n">compute_patch_metrics</span><span class="p">(</span><span class="n">true_patches_sel</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">_allthrownE</span><span class="p">[</span><span class="n">indices</span><span class="p">]))</span>
+<span class="n">gen_thrownE_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">minthE</span><span class="p">,</span> <span class="n">maxthE</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">))</span>
+<span class="n">all_generated_sel</span><span class="p">,</span> <span class="n">all_thrownE_sel</span> <span class="o">=</span> <span class="n">run_inference</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">gen_thrownE_values</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">inverse_transform</span><span class="o">=</span><span class="n">inv_log_global_norm</span><span class="p">)</span>
+<span class="n">gen_metrics_sel</span> <span class="o">=</span> <span class="n">compute_patch_metrics</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_generated_sel</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">all_thrownE_sel</span><span class="p">))</span>
+<span class="n">compare_plot</span><span class="p">(</span><span class="n">gen_metrics_sel</span><span class="p">,</span> <span class="n">true_metrics_sel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2dafc813d9ab7e40d0a2ba551d69d5613089bc1f53ab737654b3feb43df5c2ce.png" src="../_images/2dafc813d9ab7e40d0a2ba551d69d5613089bc1f53ab737654b3feb43df5c2ce.png" />
 </div>
 </div>
 </section>
@@ -1622,20 +1629,26 @@ The model learns correlations implicitly; enforcing physics priors or conservati
 <p>Here are a few directions to extend this work:</p>
 <ol class="arabic simple">
 <li><p><strong>Expand Kinematic Range:</strong><br />
-Train over the full photon energy range (e.g., 0.1–8 GeV) and check model stability and fidelity at high and low ends.</p></li>
+Train over the full photon energy range (e.g., 0.1–4 GeV) and check model stability and fidelity at high and low ends. A trained model for this purpose is available at <a class="reference external" href="https://huggingface.co/AI4EIC/DNP2025-tutorial/resolve/main/generatorGAN-FCAL-100MeV-4GeV.safetensors"><code class="docutils literal notranslate"><span class="pre">generatorGAN-FCAL-100MeV-4GeV.safetensors</span></code> <img alt="Hugging Face Dataset" src="https://img.shields.io/badge/HuggingFace-Dataset-blue.svg?logo=huggingface" /></a></p></li>
 <li><p><strong>Condition on More Features:</strong><br />
-Include the photon’s <strong>polar (θ)</strong> and <strong>azimuthal (φ)</strong> angles as conditioning inputs to model spatial dependence in shower development.</p></li>
+Include the photon’s polar <span class="math notranslate nohighlight">\((\theta)\)</span> and azimuthal <span class="math notranslate nohighlight">\((\phi)\)</span> angles as conditioning inputs to model spatial dependence in shower development.</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>For this, additional data preparation is needed. Refer to <a class="reference internal" href="02-dataset-preparation.html"><span class="std std-doc">Data set preparation</span></a> on how to create the patched dataset with updated parameters.</p>
+</div>
+<ol class="arabic simple" start="3">
 <li><p><strong>Tune Model Hyperparameters:</strong><br />
 Experiment with:</p>
 <ul class="simple">
 <li><p>Number of convolutional layers and filters</p></li>
 <li><p>Learning rate and optimizer</p></li>
-<li><p>Gradient penalty coefficient (λ)</p></li>
+<li><p>Gradient penalty coefficient <span class="math notranslate nohighlight">\((\lambda)\)</span></p></li>
 <li><p>Batch size and normalization schemes</p></li>
 </ul>
 </li>
 <li><p><strong>Evaluate Physics Fidelity:</strong><br />
-Compare reconstructed quantities (like π⁰ or ω invariant masses) using generated vs. simulated showers.</p></li>
+Compare reconstructed quantities (like <span class="math notranslate nohighlight">\(\pi^{0}\)</span> or <span class="math notranslate nohighlight">\(\omega\)</span> invariant masses) using generated vs. simulated showers.</p></li>
 <li><p><strong>Deploy as a Fast Simulation Module:</strong><br />
 Integrate the trained generator into a GlueX simulation pipeline as a drop-in surrogate for Geant4-level calorimeter simulation.</p></li>
 </ol>
@@ -1724,15 +1737,10 @@ Incorporate known detector response or conservation laws directly into the archi
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing">Data preprocessing</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hit-energy-threshold">Hit Energy Threshold</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-implication">Practical Implication</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-open-and-inspect-the-h5-file">Step 1: Open and Inspect the <code class="docutils literal notranslate"><span class="pre">.h5</span></code> File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-create-a-custom-pytorch-dataset">Step 2: Create a Custom PyTorch Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-create-dataset-and-dataloader-objects">Step 3: Create Dataset and DataLoader Objects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-diagnostic-plots">Step 4: Diagnostic plots</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gan-architecture">GAN architecture</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generator-network">Generator Network</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discriminator-network">Discriminator Network</a></li>
@@ -1749,6 +1757,7 @@ Incorporate known detector response or conservation laws directly into the archi
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference">Inference</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-fidelity">Measuring Fidelity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-conditioning">Verifying conditioning</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a><ul class="nav section-nav flex-column">
