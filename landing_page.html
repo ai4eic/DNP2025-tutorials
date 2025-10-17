@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -51,6 +51,41 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "ai4eic/DNP2025-tutorials");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -152,8 +187,14 @@
   
   
   
+    
+    
+      
+    
+    
+    <img src="_static/AI4eic_logo4.png" class="logo__image only-light" alt="Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025 - Home"/>
+    <script>document.write(`<img src="_static/AI4eic_logo4.png" class="logo__image only-dark" alt="Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025 - Home"/>`);</script>
   
-    <p class="title logo__title">Deep Learning Tutorials for Nuclear Physics at APS-DNP 2025</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -424,7 +465,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="deep-learning-tutorials-for-experimental-nuclear-physics">
 <h1>Deep Learning Tutorials for Experimental Nuclear Physics<a class="headerlink" href="#deep-learning-tutorials-for-experimental-nuclear-physics" title="Link to this heading">#</a></h1>
-<p>Welcome to the DNP 2025 Deep Learning Tutorials! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.</p>
+<p>Welcome to the DNP 2025 Deep Learning Tutorials presented at APS-DNP 2025 Data Science Workshop sessions! This Jupyter Book provides comprehensive tutorials on applying deep learning techniques to experimental nuclear physics, specifically for the Forward Calorimeter (FCAL) at GlueX.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>These tutorials are designed for Nuclear and Paricle Physics and Researchers. We focus on two main applications of deep learning:</p>
@@ -474,7 +515,9 @@ You can explore and download them at: <a class="reference external" href="https:
 <h2>Event Information<a class="headerlink" href="#event-information" title="Link to this heading">#</a></h2>
 <p><strong>DNP 2025 Tutorial Session</strong><br />
 Date: October 17, 2025<br />
-Location: Chicago, IL</p>
+Location: Chicago, IL<br />
+Workshop Sessions: <a class="reference external" href="https://schedule.aps.org/dnp/2025/events/1WD/2">1WD</a>, <a class="reference external" href="https://schedule.aps.org/dnp/2025/events/2WD/2">2WD</a></p>
+<p><img alt="" src="_images/dnp2025_header_aps.png" /></p>
 <p>For questions or feedback, please open an issue on our <a class="reference external" href="https://github.com/ai4eic/DNP2025-tutorials">GitHub repository</a>.</p>
 <hr class="docutils" />
 <div class="dropdrown admonition">
